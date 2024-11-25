@@ -1,5 +1,5 @@
 // pages/index.js
-import { useMyContext } from '../src/context/MyContext';
+import { useMyContext } from '../../src/context/MyContext';
 
 const Home = () => {
     const { state, setState } = useMyContext();

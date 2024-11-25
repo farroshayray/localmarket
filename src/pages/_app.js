@@ -1,6 +1,6 @@
 // pages/_app.js
 import '../styles/globals.css';
-import { MyProvider } from '../src/context/MyContext';
+import { MyProvider } from '../../src/context/MyContext';
 
 function MyApp({ Component, pageProps }) {
     return (
