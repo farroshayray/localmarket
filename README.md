@@ -42,4 +42,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/b
 test push readme
 test readme farros 15.39
 test farros 15.43
-test lagi 16.00
+test lagi 16.00.
