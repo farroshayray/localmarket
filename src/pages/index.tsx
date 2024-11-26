@@ -1,6 +1,7 @@
 // pages/index.tsx
 import React from 'react';
 import { useUserContext } from '../context/UserContext';
+import { Button } from "@/components/ui/button";
 
 const HomePage: React.FC = () => {
   const { user, setUser } = useUserContext();
@@ -19,7 +20,7 @@ const HomePage: React.FC = () => {
           <p>Email: {user.email}</p>
         </div>
       ) : (
-        <button onClick={handleLogin}>Login</button>
+        <Button onClick={handleLogin}>Login</Button>
       )}
     </div>
   );
