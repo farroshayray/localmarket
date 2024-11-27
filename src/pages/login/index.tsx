@@ -10,6 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Eye, EyeOff, Mail, Facebook } from 'lucide-react'
 import useStyles  from './style'
 import classNames from 'classnames'
+import Navbar from '@/components/ui/navbar'
 
 
 function login() {
@@ -18,6 +19,8 @@ function login() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   return (
+  <div>
+    <Navbar />
     <div className='min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4'>
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
@@ -130,6 +133,7 @@ function login() {
       </div>
       </motion.div>
     </div>
+  </div>
   )
 }
 
