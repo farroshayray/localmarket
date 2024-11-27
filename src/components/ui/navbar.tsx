@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState<string | null>(null);
+  const [radius, setRadius] = useState<string>(''); // State for radius selection
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -42,6 +43,12 @@ const Navbar = () => {
     }
   }, []);
 
+  const handleRadiusChange = (selectedRadius: string) => {
+    setRadius(selectedRadius);
+    // Here you can add logic to fetch or filter products based on the selected radius
+    console.log(`Selected radius: ${selectedRadius}`);
+  };
+
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -65,8 +72,6 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4">
           <ul className="hidden md:flex space-x-4">
-            <li><a href="/" className="text-white hover:text-gray-300">Home</a></li>
-            <li><a href="/products" className="text-white hover:text-gray-300">Products</a></li>
             <li><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></li>
             <li><Button>Daftar</Button></li>
           </ul>
@@ -78,10 +83,23 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Menampilkan lokasi pengguna */}
+      {/* Menampilkan lokasi pengguna di sebelah kanan */}
       {location && (
-        <div className="text-white text-sm text-center mt-2">
-          {location}
+        <div className="flex justify-end items-center text-white text-sm mt-10">
+          <span>{location}</span>
+          <div className="ml-4">
+            <select
+              value={radius}
+              onChange={(e) => handleRadiusChange(e.target.value)}
+              className="bg-gray-700 text-white rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select Radius</option>
+              <option value="<5">{"< 5 km"}</option>
+              <option value="5-10">{"5 s.d 10 km"}</option>
+              <option value="10-20">{"10 s.d 20 km"}</option>
+              <option value=">20">{"> 20 km"}</option>
+            </select>
+          </div>
         </div>
       )}
 
@@ -89,8 +107,6 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-gray-700 p-4">
           <ul className="flex flex-col space-y-2">
-            <li><a href="/" className="text-white hover:text-gray-300">Home</a></li>
-            <li><a href="/products" className="text-white hover:text-gray-300">Products</a></li>
             <li><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></li>
             <li><Button>Daftar</Button></li>
           </ul>
