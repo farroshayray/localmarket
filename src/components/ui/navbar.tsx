@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa'; // Menggunakan ikon keranjang dari react-icons
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -52,7 +53,10 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-white text-2xl font-bold">Golekin</h1>
+        <Link href='/'>
+          <h1 className="text-white text-2xl font-bold">Golekin</h1>
+        </Link>
+        
         
         <div className="hidden md:flex items-center space-x-4">
           <button className="text-white hover:text-gray-300">Kategori</button>
@@ -72,8 +76,12 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4">
           <ul className="hidden md:flex space-x-4">
-            <li><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></li>
-            <li><Button>Daftar</Button></li>
+            <li>
+              <Link href='/login'><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></Link>
+            </li>
+            <li>
+              <Link href='/register'><Button>Daftar</Button></Link>
+            </li>
           </ul>
 
           {/* Tombol untuk mobile menu */}
@@ -91,13 +99,13 @@ const Navbar = () => {
             <select
               value={radius}
               onChange={(e) => handleRadiusChange(e.target.value)}
-              className="bg-gray-700 text-white rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-gray-700 text-white rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-              <option value="">Select Radius</option>
-              <option value="<5">{"< 5 km"}</option>
-              <option value="5-10">{"5 s.d 10 km"}</option>
-              <option value="10-20">{"10 s.d 20 km"}</option>
-              <option value=">20">{"> 20 km"}</option>
+              <option className='cursor-pointer' value="">Select Radius</option>
+              <option className='cursor-pointer' value="<5">{"< 5 km"}</option>
+              <option className='cursor-pointer' value="5-10">{"5 s.d 10 km"}</option>
+              <option className='cursor-pointer' value="10-20">{"10 s.d 20 km"}</option>
+              <option className='cursor-pointer' value=">20">{"> 20 km"}</option>
             </select>
           </div>
         </div>

@@ -1,23 +1,23 @@
-// components/marketCarousel.tsx
+// components/ProductCarousel.tsx
 import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import styles from './market_list.module.css';
+import styles from './category_list.module.css';
 
-interface Market {
+interface Product {
   id: number;
   title: string;
   description: string;
-  location: string;
+  price: number;
   imageUrl: string;
 }
 
-interface MarketCarouselProps {
-  markets: Market[];
+interface ProductCarouselProps {
+  products: Product[];
 }
 
-const MarketCarousel: React.FC<MarketCarouselProps> = ({ markets }) => {
+const ProductCarousel: React.FC<ProductCarouselProps> = ({ products }) => {
     const settings = {
         dots: true,
         infinite: true,
@@ -44,23 +44,23 @@ const MarketCarousel: React.FC<MarketCarouselProps> = ({ markets }) => {
 
       return (
         <div>
-          <h2>Pasar terdekat</h2>
+          <h2>Category 1</h2>
           <div className={styles.sliderContainer}>
-            <Slider {...settings}>
-              {markets.map((market) => (
-                <div key={market.id}>
-                  <div className={styles.marketCard}>
-                    <img src={market.imageUrl} alt={market.title} className={styles.marketImage} />
-                    <h3 className={styles.marketTitle}>{market.title}</h3>
-                    <p className={styles.marketDescription}>{market.description}</p>
-                    <p className={styles.marketLocation}>{market.location}</p>
+              <Slider {...settings}>
+                {products.map((product) => (
+                  <div key={product.id}>
+                    <div className={styles.productCard}>
+                      <img src={product.imageUrl} alt={product.title} className={styles.productImage} />
+                      <h3 className={styles.productTitle}>{product.title}</h3>
+                      <p className={styles.productDescription}>{product.description}</p>
+                      <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </Slider>
+                ))}
+              </Slider>
           </div>
         </div>
     );
 };
 
-export default MarketCarousel;
+export default ProductCarousel;
