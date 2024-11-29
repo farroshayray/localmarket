@@ -1,29 +1,16 @@
-// pages/index.tsx
-import React from 'react';
-import { useUserContext } from '../context/UserContext';
-import { Button } from "@/components/ui/button";
+   // src/index.tsx
+   import { useEffect } from 'react';
+   import { useRouter } from 'next/router';
 
-const HomePage: React.FC = () => {
-  const { user, setUser } = useUserContext();
+   const IndexPage: React.FC = () => {
+       const router = useRouter();
 
-  const handleLogin = () => {
-    // Simulasi login
-    setUser({ name: 'John Doe', email: 'john@example.com' });
-  };
+       useEffect(() => {
+           // Redirect ke halaman home
+           router.push('/home');
+       }, [router]);
 
-  return (
-    <div>
-      <h1>Welcome to Next.js with Context API</h1>
-      {user ? (
-        <div>
-          <h2>Hello, {user.name}</h2>
-          <p>Email: {user.email}</p>
-        </div>
-      ) : (
-        <Button onClick={handleLogin}>Login</Button>
-      )}
-    </div>
-  );
-};
+       return null; // Tidak ada konten yang ditampilkan di halaman ini
+   };
 
-export default HomePage;
+   export default IndexPage;

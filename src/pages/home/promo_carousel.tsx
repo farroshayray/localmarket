@@ -72,7 +72,7 @@ const PromoCarousel = () => {
     <div className={styles.carouselItem}>
         <img src="https://via.placeholder.com/150" alt="Item 5" className="item-image" />
         <div className={styles.itemContent}>
-            <h3 className={styles.h3}>Item 5</h3>
+            <h3 className={`{styles.h3}`}>Item 5</h3>
             <p>Description for Item 5</p>
         </div>
     </div>
