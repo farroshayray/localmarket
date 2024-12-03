@@ -53,6 +53,9 @@ const Navbar = () => {
     // Hapus token dari localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
+    localStorage.removeItem('username');
+    localStorage.removeItem('fullname');
+
     setIsLoggedIn(false); // Perbarui status login
   };
 

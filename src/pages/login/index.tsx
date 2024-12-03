@@ -37,6 +37,8 @@ function login() {
       console.log('Login berhasil:', response);
       localStorage.setItem('access_token', response.access_token);
       localStorage.setItem('role', response.role);
+      localStorage.setItem('username', response.username);
+      localStorage.setItem('fullname', response.fullname);
       alert(response.message);
       if (response.role === 'konsumen') {
         router.push('/home');

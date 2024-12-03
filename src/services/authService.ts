@@ -26,7 +26,6 @@ export const registerUser = async (data: {
     }
   };
 
-
   // fungsi untuk login user
   export const loginUser = async (data: {
     email: string;
