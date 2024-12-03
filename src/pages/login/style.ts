@@ -40,6 +40,11 @@ const useStyles = () => {
         lineUperCase: "relative flex justify-center text-xs uppercase",
         lineBackground: "bg-background px-2 text-muted-foreground",
 
+        //posisi
+        positionText: "text-black",
+        placeHolderLine: "space-y-4",
+        positionSelect: "text-black w-[180px]",
+        
         //icon email
         iconGaris: "grid grid-cols-2 gap-4",
         iconEmailText: "text-black w-full",
