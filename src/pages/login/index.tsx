@@ -11,6 +11,7 @@ import { Eye, EyeOff, Mail, Facebook } from 'lucide-react'
 import useStyles  from './style'
 import classNames from 'classnames'
 import Navbar from '@/components/ui/navbar'
+import Link from 'next/link'
 
 
 function login() {
@@ -122,12 +123,9 @@ function login() {
             {/* daftar */}
             <p className={classNames('footer-text',styles.footerText)}>
               Belum punya akun?{" "}
-              <a
-                href="#"
-                className={classNames('footer-hover',styles.footerHover)}
-              >
-                Daftar
-              </a>
+              <Link href="/register" className={classNames('footer-hover',styles.footerHover)}>
+                  Daftar
+                </Link>
             </p>
           </form>
       </div>
