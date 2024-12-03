@@ -44,8 +44,19 @@ const useStyles = () => {
          buttonSubmit: "",
 
          //pin
-         pinText: "text-black",
+         pinEnter: "space-y-2",
+         pinText: "text-black text-sm font-medium",
+         pinInput: "text-black border border-gray-300 rounded-md w-full px-4 py-2 placeholder:text-gray-500",
+
+         //phone number
+         phoneEnter: "space-y-2",
+         phoneText: "text-black text-sm font-medium",
+         phoneInput: "text-black border border-gray-300 rounded-md w-full px-4 py-2 placeholder:text-gray-500",
+
          /* styles.module.css atau styles.module.scss */
+         //masuk
+        footerText: "text-center text-sm text-black",
+        footerHover: "text-primary hover:underline",
          
     }
 }
