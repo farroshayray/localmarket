@@ -7,12 +7,17 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState<string | null>(null);
   const [radius, setRadius] = useState<string>(''); // State for radius selection
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State untuk status login
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   useEffect(() => {
+    // Cek keberadaan access_token di localStorage
+    const token = localStorage.getItem('access_token');
+    setIsLoggedIn(!!token);
+
     // Mendapatkan lokasi pengguna
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -44,9 +49,15 @@ const Navbar = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    // Hapus token dari localStorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('role');
+    setIsLoggedIn(false); // Perbarui status login
+  };
+
   const handleRadiusChange = (selectedRadius: string) => {
     setRadius(selectedRadius);
-    // Here you can add logic to fetch or filter products based on the selected radius
     console.log(`Selected radius: ${selectedRadius}`);
   };
 
@@ -57,10 +68,8 @@ const Navbar = () => {
           <h1 className="text-white text-2xl font-bold">Golekin</h1>
         </Link>
         
-        
         <div className="hidden md:flex items-center space-x-4">
           <button className="text-white hover:text-gray-300">Kategori</button>
-          
           <div className="relative">
             <input
               type="text"
@@ -68,7 +77,6 @@ const Navbar = () => {
               className="bg-gray-700 text-white rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          
           <a href="/cart" className="text-white hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-xl" />
           </a>
@@ -76,12 +84,22 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4">
           <ul className="hidden md:flex space-x-4">
-            <li>
-              <Link href='/login'><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></Link>
-            </li>
-            <li>
-              <Link href='/register'><Button>Daftar</Button></Link>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
+                  Keluar
+                </Button>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link href='/login'><Button className="bg-slate-600 hover:bg-slate-50">Masuk</Button></Link>
+                </li>
+                <li>
+                  <Link href='/register'><Button>Daftar</Button></Link>
+                </li>
+              </>
+            )}
           </ul>
 
           {/* Tombol untuk mobile menu */}
@@ -101,11 +119,11 @@ const Navbar = () => {
               onChange={(e) => handleRadiusChange(e.target.value)}
               className="bg-gray-700 text-white rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-              <option className='cursor-pointer' value="">Select Radius</option>
-              <option className='cursor-pointer' value="<5">{"< 5 km"}</option>
-              <option className='cursor-pointer' value="5-10">{"5 s.d 10 km"}</option>
-              <option className='cursor-pointer' value="10-20">{"10 s.d 20 km"}</option>
-              <option className='cursor-pointer' value=">20">{"> 20 km"}</option>
+              <option className="cursor-pointer" value="">Select Radius</option>
+              <option className="cursor-pointer" value="<5">{"< 5 km"}</option>
+              <option className="cursor-pointer" value="5-10">{"5 s.d 10 km"}</option>
+              <option className="cursor-pointer" value="10-20">{"10 s.d 20 km"}</option>
+              <option className="cursor-pointer" value=">20">{"> 20 km"}</option>
             </select>
           </div>
         </div>
@@ -115,8 +133,18 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-gray-700 p-4">
           <ul className="flex flex-col space-y-2">
-            <li><Button className='bg-slate-600 hover:bg-slate-50'>Masuk</Button></li>
-            <li><Button>Daftar</Button></li>
+            {isLoggedIn ? (
+              <li>
+                <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
+                  Keluar
+                </Button>
+              </li>
+            ) : (
+              <>
+                <li><Link href="/login"><Button className="bg-slate-600 hover:bg-slate-50">Masuk</Button></Link></li>
+                <li><Link href="/register"><Button>Daftar</Button></Link></li>
+              </>
+            )}
           </ul>
         </div>
       )}
