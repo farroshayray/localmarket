@@ -12,13 +12,49 @@ import useStyles  from './style'
 import classNames from 'classnames'
 import Navbar from '@/components/ui/navbar'
 import Link from 'next/link'
+import { loginUser } from '@/services/authService'
+import { useRouter } from 'next/router'
 
 
 function login() {
-  const styles = useStyles()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const styles = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
+
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const data = {
+      email: email,
+      password: password,
+      role: selectedRole,
+    };
+
+    try {
+      const response = await loginUser(data);
+      console.log('Login berhasil:', response);
+      localStorage.setItem('access_token', response.access_token);
+      localStorage.setItem('role', response.role);
+      alert(response.message);
+      if (response.role === 'konsumen') {
+        router.push('/home');
+      } else if (response.role === 'pedagang') {
+        router.push('/pedagang');
+      } else if (response.role === 'agen') {
+        router.push('/agen');
+      } else if (response.role === 'driver') {
+        router.push('/driver');
+      }
+    } catch (error: any) {
+      console.error('Login gagal:', error.message);
+      alert('Login gagal: ' + error.message);
+      router.push('/login');
+    }
+    
+  }
   return (
   <div>
     <Navbar />
@@ -36,8 +72,25 @@ function login() {
             <p className={classNames('box-subtitle',styles.boxSubtitle)}> selamat datang di Golekin</p>
           </div>
 
+          {/* Posisi */}
+          <div className="space-y-2">
+              <Label htmlFor="posisi" className={classNames('position-text', styles.positionText)}>
+                Masuk Sebagai
+              </Label>
+              <select
+                onChange={(e) => setSelectedRole(e.target.value)}
+                className={classNames('position-select', styles.positionSelect)}
+              >
+                <option value="">Pilih</option>
+                <option value="konsumen">Konsumen</option>
+                <option value="agen">Agen</option>
+                <option value="pedagang">Pedagang</option>
+                <option value="driver">Driver</option>
+              </select>
+          </div>
+
           {/* Email */}
-          <form className={classNames('login-form',styles.loginForm)}>
+          <form className={classNames('login-form',styles.loginForm)} onSubmit={handleLogin}>
             <div className={classNames('loginForm-line',styles.loginFormLine)}>
               <Label htmlFor="email" className={classNames('email-text',styles.emailText)}> Email </Label>
               <Input className={classNames('placeholder-email',styles.placeHolderEmail)}
@@ -91,9 +144,9 @@ function login() {
             
             {/* login */}
             <div className={classNames('login-space',styles.loginSpace)}>
-              <button type="submit" className={classNames('login-button',styles.loginButton)}>
+              <Button type="submit" className={classNames('login-button',styles.loginButton)}>
                 Login
-              </button>
+              </Button>
             </div>
 
             {/* garis  */}
