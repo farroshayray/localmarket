@@ -1,7 +1,5 @@
 import axios from 'axios';
-
-// Base URL for your API
-const API_BASE_URL = 'http://localhost:5000';
+import API_BASE_URL from '../../config';
 
 // Interface for Product Data
 interface ProductData {

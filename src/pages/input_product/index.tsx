@@ -17,6 +17,8 @@ import useStyles from "./style";
 import classNames from "classnames";
 import axios from "axios";
 import { ProductService } from "@/services/productService";
+import API_BASE_URL from "../../../config";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const productSchema = z.object({
   name: z.string().min(1, "Nama produk wajib diisi"),
@@ -52,7 +54,7 @@ export function ProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/products/categories");
+        const response = await axios.get(`${API_BASE_URL}/products/categories`);
         setCategories(response.data.categories);
       } catch (error) {
         if (error instanceof Error) {
@@ -84,7 +86,7 @@ export function ProductForm() {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/upload/files", formData, {
+      const response = await axios.post(`${API_BASE_URL}/upload/files`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -131,7 +133,7 @@ export function ProductForm() {
   };
 
   return (
-    <>
+    <ProtectedRoute allowedRoles={["agen"]}>
       <Navbar />
       <div className={classNames("input-background", styles.inputBackground)}>
         <div className={classNames("input-enter", styles.inputEnter)}>
@@ -292,7 +294,7 @@ export function ProductForm() {
           )}
         </div>
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
 
