@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa'; // Menggunakan ikon keranjang dari react-icons
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import CategoryDropdown from './categoryDropDown';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState<string | null>(null);
   const [radius, setRadius] = useState<string>(''); // State for radius selection
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State untuk status login
+
+  const router = useRouter();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -55,6 +59,8 @@ const Navbar = () => {
     localStorage.removeItem('role');
     localStorage.removeItem('username');
     localStorage.removeItem('fullname');
+    router.push('/login')
+
 
     setIsLoggedIn(false); // Perbarui status login
   };
@@ -72,7 +78,7 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex items-center space-x-4">
-          <button className="text-white hover:text-gray-300">Kategori</button>
+          <CategoryDropdown />
           <div className="relative">
             <input
               type="text"
@@ -114,7 +120,7 @@ const Navbar = () => {
 
       {/* Menampilkan lokasi pengguna di sebelah kanan */}
       {location && (
-        <div className="flex justify-end items-center text-white text-sm mt-10">
+        <div className="flex justify-end items-center text-white text-sm mt-2">
           <span>{location}</span>
           <div className="ml-4">
             <select
