@@ -18,6 +18,7 @@ const MarketCarousel: React.FC = () => {
   const [markets, setMarkets] = useState<Market[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Reverse geocode to get human-readable location
   const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
@@ -41,8 +42,13 @@ const MarketCarousel: React.FC = () => {
     const fetchMarkets = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://127.0.0.1:5000/user/agents');
+        const response = await axios.get(`${API_BASE_URL}/user/agents`);
         const agents = response.data.agents;
+
+        if (!agents.length) {
+          setError('No markets available.');
+          return;
+        }
 
         const formattedMarkets = await Promise.all(
           agents.map(async (agent: any) => {
@@ -72,7 +78,11 @@ const MarketCarousel: React.FC = () => {
 
         setMarkets(formattedMarkets);
       } catch (error) {
-        setError('Failed to fetch markets. Please try again.');
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setError('No markets found.');
+        } else {
+          setError('Failed to fetch markets. Please try again.');
+        }
         console.error('Error fetching markets:', error);
       } finally {
         setLoading(false);
@@ -112,6 +122,10 @@ const MarketCarousel: React.FC = () => {
 
   if (error) {
     return <p className="text-red-500">{error}</p>;
+  }
+
+  if (!markets.length) {
+    return <p className="text-center text-gray-500">No markets available at the moment.</p>;
   }
 
   return (

@@ -17,7 +17,6 @@ import useStyles from "./style";
 import classNames from "classnames";
 import axios from "axios";
 import { ProductService } from "@/services/productService";
-import API_BASE_URL from "../../../config";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 const productSchema = z.object({
@@ -38,6 +37,7 @@ export function ProductForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [categories, setCategories] = useState<{ id: number; category_name: string }[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),

@@ -1,13 +1,10 @@
-// components/ui/CategoryList.tsx
 import React, { useState, useEffect } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import axios from 'axios';
 import styles from './category_list.module.css';
-import API_BASE_URL from '../../../config';
 import { useRouter } from 'next/router';
-
 
 interface Product {
   id: number;
@@ -25,32 +22,51 @@ function capitalizeFirstLetter(text: string): string {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
 const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
- 
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       try {
         setLoading(true);
+        console.log(`Fetching from: ${API_BASE_URL}/products/category_products/${categoryId}`);
         const response = await axios.get(`${API_BASE_URL}/products/category_products/${categoryId}`);
-        const { category_name, products } = response.data;
-        setCategoryName(category_name);
-        const fetchedProducts = response.data.products.map((product: any) => ({
-          id: product.id,
-          title: product.product_name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.image_url,
-        }));
-        setProducts(fetchedProducts);
-      } catch (err) {
-        setError('Failed to fetch products for this category. Please try again later.');
-        console.error('Error fetching category products:', err);
+        
+        // Handle successful response
+        if (response.data && response.status === 200) {
+          const { category_name, products } = response.data;
+          setCategoryName(category_name);
+          const fetchedProducts = products.map((product: any) => ({
+            id: product.id,
+            title: product.product_name,
+            description: product.description,
+            price: product.price,
+            imageUrl: product.image_url,
+          }));
+          setProducts(fetchedProducts);
+        }
+      } catch (err: any) {
+        // Log the error for debugging
+        console.error('Error details:', err);
+
+        // Handle API-specific error structure
+        if (err.response) {
+          if (err.response.status === 404 && err.response.data?.error) {
+            setError(err.response.data.error);
+          } else {
+            setError(`API Error: ${err.response.data?.message || 'An unexpected error occurred.'}`);
+          }
+        } else if (err.request) {
+          setError('No response from the server. Please check your network.');
+        } else {
+          setError('An unexpected error occurred. Please try again later.');
+        }
       } finally {
         setLoading(false);
       }
@@ -60,29 +76,25 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
   }, [categoryId]);
 
   const handleProductClick = (id: number) => {
-    router.push(`/product/${id}`)
+    router.push(`/product/${id}`);
   };
 
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 6, // Adjust the number of slides for desktop
+    slidesToShow: 6,
     slidesToScroll: 2,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
       {
-        breakpoint: 1024, // Tablet
-        settings: {
-          slidesToShow: 3,
-        },
+        breakpoint: 1024,
+        settings: { slidesToShow: 3 },
       },
       {
-        breakpoint: 768, // Mobile
-        settings: {
-          slidesToShow: 2,
-        },
+        breakpoint: 768,
+        settings: { slidesToShow: 2 },
       },
     ],
   };
@@ -92,7 +104,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="text-red-500">{error}</p>; // Display error message
   }
 
   return (
