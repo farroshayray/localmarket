@@ -1,5 +1,4 @@
 import axios from 'axios';
-import API_BASE_URL from '../../config';
 
 // Interface for Product Data
 interface ProductData {
@@ -10,6 +9,7 @@ interface ProductData {
   category?: string;
   img?: string;
 }
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const ProductService = {
   // Function to add a product

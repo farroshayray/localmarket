@@ -24,13 +24,14 @@ const ProductDetail: React.FC = () => {
   const [shopName, setShopName] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
     if (!id) return;
 
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/products/product/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/products/product/${id}`);
         const { product, category_name, shop_name } = response.data;
 
         setProduct({

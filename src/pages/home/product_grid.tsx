@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import styles from './product_grid.module.css';
-import API_BASE_URL from "../../../config";
 
 // Define Product interface
 interface Product {
@@ -17,6 +16,7 @@ const ProductGrid: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
 
   useEffect(() => {

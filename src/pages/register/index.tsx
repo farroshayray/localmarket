@@ -38,9 +38,10 @@ function Register() {
   const [markerPosition, setMarkerPosition] = useState(center); // State untuk lokasi marker
   const [mapCenter, setMapCenter] = useState(center); // State untuk pusat peta
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null); // Ref untuk Autocomplete
+  const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyASLwcnEJ9PU6rtCSoXeuBX8gHLcAURGyo', // Ganti dengan API Key Anda
-    libraries: ['places'], // Pastikan library 'places' dimuat
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places'], 
   });
   const router = useRouter();
 

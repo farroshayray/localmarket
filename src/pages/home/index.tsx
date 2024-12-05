@@ -34,8 +34,8 @@ const Home = () => {
       </div>
       <div className="product-list-by-radius flex flex-col mt-5 rounded-xl bg-gray-800 p-10">
         <h1 className="mt-3 mb-3 mx-auto">Product Category</h1>
-        <CategoryList categoryId={1} />
         <CategoryList categoryId={2} />
+        <CategoryList categoryId={3} />
       </div>
       <div className="product-grid flex flex-col mt-5 rounded-xl bg-gray-800 p-10">
         <h1 className="mt-3 mb-3 mx-auto">Product Grid</h1>
