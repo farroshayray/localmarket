@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/ui/navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Transaction {
   id: number;
@@ -86,6 +88,12 @@ const Agen: React.FC = () => {
     <div className="bg-gray-100 min-h-screen py-6">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Agen Transactions</h1>
+
+        {/* feature button */}
+        <div className="flex justify-center mb-4">
+          <Link href='/input_product'><Button className="mr-4 bg-gray-200 text-black hover:bg-gray-300">Input Product</Button></Link>
+          <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Products</Button>
+        </div>
 
         {/* Tabs */}
         <div className="flex justify-center space-x-4 mb-6">
