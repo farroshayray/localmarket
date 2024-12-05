@@ -32,6 +32,7 @@ function Register() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [tempatUsaha, setTempatUsaha] = useState('');
   const [markerPosition, setMarkerPosition] = useState(center); // State untuk lokasi marker
@@ -51,6 +52,7 @@ function Register() {
       fullname: fullName, // Ganti dengan nilai input
       email: email,
       password: password,
+      description: description,
       pin: pin,
       role: selectedRole,
       phone_number: phoneNumber,
@@ -67,6 +69,7 @@ function Register() {
       alert('Registrasi gagal: ' + error.message);
     }
   };
+
 
   // Fungsi untuk menangani perubahan tempat
   const handlePlaceChange = () => {
@@ -128,46 +131,6 @@ function Register() {
               </select>
             </div>
 
-            {/* Isian tambahan untuk Tempat Usaha */}
-            {(selectedRole === 'pedagang' || selectedRole === 'driver' || selectedRole === 'agen') && (
-              <div className={classNames('nama-enter', styles.namaEnter)}>
-                <Label htmlFor="tempatUsaha" className={classNames('nama-text', styles.namaText)}>
-                  Tempat Usaha
-                </Label>
-                {/* Autocomplete Input */}
-                {isLoaded && (
-                  <Autocomplete
-                    onLoad={(autocomplete) => {
-                      autocompleteRef.current = autocomplete;
-                    }}
-                    onPlaceChanged={handlePlaceChange}
-                  >
-                    <Input
-                      id="tempatUsaha"
-                      placeholder="Cari nama tempat atau alamat"
-                      value={tempatUsaha}
-                      onChange={(e) => setTempatUsaha(e.target.value)}
-                      className={classNames('nama-input', styles.namaInput)}
-                    />
-                  </Autocomplete>
-                )}
-
-                {/* Google Maps */}
-                {isLoaded && (
-                  <div style={{ marginTop: '1rem' }}>
-                    <GoogleMap
-                      mapContainerStyle={mapContainerStyle}
-                      center={mapCenter} // Pusat peta diperbarui
-                      zoom={15}
-                      onClick={handleMapClick}
-                    >
-                      <MarkerF position={markerPosition} />
-                    </GoogleMap>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Username */}
             <div className={classNames('nama-enter', styles.namaEnter)}>
               <Label htmlFor="username" className={classNames('nama-text', styles.namaText)}>
@@ -225,6 +188,60 @@ function Register() {
                 className={classNames('phone-input', styles.phoneInput)}
             />
             </div>
+
+            {/* Isian tambahan untuk driver, agen, dan pedagang */}
+            {(selectedRole === 'pedagang' || selectedRole === 'driver' || selectedRole === 'agen') && (
+              <div className={classNames('nama-enter', styles.namaEnter)}>
+                <Label htmlFor="tempatUsaha" className={classNames('nama-text', styles.namaText)}>
+                  Tempat Usaha
+                </Label>
+                {/* Autocomplete Input */}
+                {isLoaded && (
+                  <Autocomplete
+                    onLoad={(autocomplete) => {
+                      autocompleteRef.current = autocomplete;
+                    }}
+                    onPlaceChanged={handlePlaceChange}
+                  >
+                    <Input
+                      id="tempatUsaha"
+                      placeholder="Cari nama tempat atau alamat"
+                      value={tempatUsaha}
+                      onChange={(e) => setTempatUsaha(e.target.value)}
+                      className={classNames('nama-input', styles.namaInput)}
+                    />
+                  </Autocomplete>
+                )}
+
+                {/* Google Maps */}
+                {isLoaded && (
+                  <div style={{ marginTop: '1rem' }}>
+                    <GoogleMap
+                      mapContainerStyle={mapContainerStyle}
+                      center={mapCenter} // Pusat peta diperbarui
+                      zoom={15}
+                      onClick={handleMapClick}
+                    >
+                      <MarkerF position={markerPosition} />
+                    </GoogleMap>
+                  </div>
+                )}
+                {/* Description */}
+                <div className={classNames('description-enter', styles.descriptionEnter)}>
+                <Label htmlFor="description" className={classNames('description-text', styles.descriptionText)}>
+                    Deskripsi Toko
+                </Label>
+                <Input
+                    id="description"
+                    type="text"
+                    placeholder="Masukkan deskripsi toko"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className={classNames('description-input', styles.descriptionInput)}
+                />
+                </div>
+              </div>
+            )}
 
             {/* Password */}
             <div className={classNames('password-enter', styles.passwordEnter)}>
