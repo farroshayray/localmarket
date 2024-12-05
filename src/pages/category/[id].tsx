@@ -18,6 +18,7 @@ const CategoryProducts: React.FC = () => {
   const [categoryName, setCategoryName] = useState<string>("Category Products");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const router = useRouter();
   const { id } = router.query;
@@ -29,7 +30,7 @@ const CategoryProducts: React.FC = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://127.0.0.1:5000/products/category_products/${id}`
+          `${API_BASE_URL}/products/category_products/${id}`
         );
         const { products, category_name } = response.data;
 
