@@ -24,6 +24,12 @@ const useStyles = () => {
         emailText: "text-black",
         emailInput: "text-black",
 
+        //description
+        descriptionSpace: "space-y-4",
+        descriptionEnter: "space-y-2",
+        descriptionText: "text-black",
+        descriptionInput: "text-black",
+
          // password button
          passwordText: "text-black",
          placeHolderPassword: "text-black",

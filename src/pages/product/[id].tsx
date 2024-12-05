@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import Navbar from "@/components/ui/navbar";
 
 // Define Product interface
 interface Product {
@@ -69,6 +70,8 @@ const ProductDetail: React.FC = () => {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
       <div className="flex flex-col md:flex-row">
         {/* Image Section */}
@@ -91,6 +94,7 @@ const ProductDetail: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

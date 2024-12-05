@@ -246,7 +246,7 @@ export function ProductForm() {
                     <FormControl>
                       <Input
                         type="file"
-                        className="border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                        className="border border-gray-300 rounded-lg text-black bg-gray-300 hover:bg-gray-400 cursor-pointer"
                         onChange={async (e) => {
                           if (e.target.files?.[0]) {
                             try {

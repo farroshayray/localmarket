@@ -42,6 +42,7 @@ const ProductGrid: React.FC = () => {
     fetchProducts();
   }, []);
 
+
   const handleProductClick = (id: number) => {
     router.push(`/product/${id}`);
   };

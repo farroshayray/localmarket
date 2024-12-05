@@ -46,7 +46,7 @@
 .marketDescription {
   font-size: 0.9rem; /* Ukuran font deskripsi */
   color: #666; /* Warna teks deskripsi */
-  margin: 10px 0; /* Margin atas dan bawah */
+  margin: 5px 1rem; /* Margin atas dan bawah */
   overflow: hidden; /* Menyembunyikan teks yang melampaui batas */
   text-overflow: ellipsis; /* Menampilkan ellipsis untuk teks yang terpotong */
   display: -webkit-box; /* Membuat box fleksibel */

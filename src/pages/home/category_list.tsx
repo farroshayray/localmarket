@@ -6,6 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import axios from 'axios';
 import styles from './category_list.module.css';
 import API_BASE_URL from '../../../config';
+import { useRouter } from 'next/router';
 
 
 interface Product {
@@ -29,6 +30,8 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
+  const router = useRouter();
+ 
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -56,11 +59,15 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
     fetchCategoryProducts();
   }, [categoryId]);
 
+  const handleProductClick = (id: number) => {
+    router.push(`/product/${id}`)
+  };
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4, // Adjust the number of slides for desktop
+    slidesToShow: 6, // Adjust the number of slides for desktop
     slidesToScroll: 2,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -74,7 +81,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
       {
         breakpoint: 768, // Mobile
         settings: {
-          slidesToShow: 1,
+          slidesToShow: 2,
         },
       },
     ],
@@ -94,7 +101,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
       <div className={styles.sliderContainer}>
         <Slider {...settings}>
           {products.map((product) => (
-            <div key={product.id}>
+            <div key={product.id} onClick={() => handleProductClick(product.id)}>
               <div className={styles.productCard}>
                 <img src={product.imageUrl} alt={product.title} className={styles.productImage} />
                 <h3 className={styles.productTitle}>{product.title}</h3>
