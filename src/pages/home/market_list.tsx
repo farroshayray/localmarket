@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import styles from './market_list.module.css';
 
 interface Market {
@@ -19,8 +20,8 @@ const MarketCarousel: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const router = useRouter();
 
-  // Reverse geocode to get human-readable location
   const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
     try {
       const response = await axios.get(
@@ -37,7 +38,6 @@ const MarketCarousel: React.FC = () => {
     }
   };
 
-  // Fetch agent data and process locations
   useEffect(() => {
     const fetchMarkets = async () => {
       try {
@@ -69,9 +69,7 @@ const MarketCarousel: React.FC = () => {
               phone: agent.phone_number,
               email: agent.email,
               location: formattedLocation,
-              imageUrl: `https://via.placeholder.com/150?text=${encodeURIComponent(
-                agent.fullname
-              )}`,
+              imageUrl: agent.image_url,
             };
           })
         );
@@ -92,26 +90,26 @@ const MarketCarousel: React.FC = () => {
     fetchMarkets();
   }, []);
 
+  const handleMarketClick = (id: number) => {
+    router.push(`/market_product/${id}`);
+  };
+
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 6, // Default for desktop
+    slidesToShow: 6,
     slidesToScroll: 2,
     autoplay: true,
     autoplaySpeed: 3000,
     responsive: [
       {
-        breakpoint: 1024, // Tablet
-        settings: {
-          slidesToShow: 3,
-        },
+        breakpoint: 1024,
+        settings: { slidesToShow: 3 },
       },
       {
-        breakpoint: 768, // Mobile
-        settings: {
-          slidesToShow: 2,
-        },
+        breakpoint: 768,
+        settings: { slidesToShow: 2 },
       },
     ],
   };
@@ -134,7 +132,7 @@ const MarketCarousel: React.FC = () => {
       <div className={styles.sliderContainer}>
         <Slider {...settings}>
           {markets.map((market) => (
-            <div key={market.id}>
+            <div key={market.id} onClick={() => handleMarketClick(market.id)}>
               <div className={styles.marketCard}>
                 <img
                   src={market.imageUrl}
