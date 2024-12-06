@@ -50,18 +50,13 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
             imageUrl: product.image_url,
           }));
           setProducts(fetchedProducts);
-        }
+        } 
       } catch (err: any) {
-        // Log the error for debugging
         console.error('Error details:', err);
 
-        // Handle API-specific error structure
-        if (err.response) {
-          if (err.response.status === 404 && err.response.data?.error) {
-            setError(err.response.data.error);
-          } else {
-            setError(`API Error: ${err.response.data?.message || 'An unexpected error occurred.'}`);
-          }
+        // Gracefully handle the 404 error
+        if (err.response && err.response.status === 404) {
+          setError('Category not found.');
         } else if (err.request) {
           setError('No response from the server. Please check your network.');
         } else {
