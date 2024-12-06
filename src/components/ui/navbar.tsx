@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import CategoryDropdown from './categoryDropDown';
+import SearchBar from './searchBar';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [location, setLocation] = useState<string | null>(null);
   const [radius, setRadius] = useState<string>(''); // State for radius selection
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State untuk status login
+  const [isAgent, setIsAgent] = useState(false); // State untuk role agen
 
   const router = useRouter();
 
@@ -18,9 +20,12 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // Cek keberadaan access_token di localStorage
+    // Cek keberadaan access_token dan role di localStorage
     const token = localStorage.getItem('access_token');
+    const role = localStorage.getItem('role');
+
     setIsLoggedIn(!!token);
+    setIsAgent(role === 'agen'); // Periksa apakah role adalah 'agen'
 
     // Mendapatkan lokasi pengguna
     if (navigator.geolocation) {
@@ -54,15 +59,16 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    // Hapus token dari localStorage
+    // Hapus token dan role dari localStorage
     localStorage.removeItem('access_token');
     localStorage.removeItem('role');
     localStorage.removeItem('username');
     localStorage.removeItem('fullname');
-    router.push('/login')
-
+    localStorage.removeItem('id');
+    router.push('/login');
 
     setIsLoggedIn(false); // Perbarui status login
+    setIsAgent(false); // Perbarui status role agen
   };
 
   const handleRadiusChange = (selectedRadius: string) => {
@@ -78,15 +84,15 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex items-center space-x-4">
+          {/* Tambahkan tombol Agen jika isAgent */}
+          {isAgent && (
+            <Link href="/agen" className='text-white hover:text-gray-300'>
+              Agen
+            </Link>
+          )}
           <CategoryDropdown />
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-700 text-white rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <a href="/cart" className="text-white hover:text-gray-300 flex items-center">
+          <SearchBar />
+          <a href="/cartpage" className="text-white hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-xl" />
           </a>
         </div>
@@ -142,6 +148,13 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-gray-700 p-4">
           <ul className="flex flex-col space-y-2">
+            {isAgent && (
+              <li>
+                <Link href="/agen">
+                  <Button className="bg-blue-600 hover:bg-blue-700">Agen</Button>
+                </Link>
+              </li>
+            )}
             {isLoggedIn ? (
               <li>
                 <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
