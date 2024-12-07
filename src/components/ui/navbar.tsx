@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import CategoryDropdown from './categoryDropDown';
 import SearchBar from './searchBar';
+import Image from 'next/image';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -80,10 +81,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-900 p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href='/'>
-          <h1 className="text-white text-2xl font-bold">Golekin</h1>
+        <Link href='/' className='ml-4'>
+          <Image src="/images/Golekin_logo.png" alt="Logo" width={100} height={100} />
         </Link>
         
         <div className="hidden md:flex items-center space-x-6">
