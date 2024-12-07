@@ -4,7 +4,7 @@ const useStyles = () => {
         boxRegister: "min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4",
 
         // box login
-        boxLogin: "bg-white rounded-2xl shadow-xl p-8 space-y-0",
+        boxLogin: "bg-white rounded-2xl shadow-xl p-8 space-y-0 md:w-96",
         boxCenter: "text-center space-y-2",
         boxTitle: "text-3xl font-bold tracking-tighter text-black",
         boxSubtitle: "text-muted-foreground",

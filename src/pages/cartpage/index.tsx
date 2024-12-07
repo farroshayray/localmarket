@@ -57,6 +57,31 @@ const CartPage: React.FC = () => {
     fetchCart();
   }, []);
 
+  const handleDeleteItem = async (userId: string, productId: number) => {
+    const confirmDelete = confirm("Apakah produk akan dihapus?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/cart/delete/${userId}/${productId}`
+      );
+      if (response.status === 200) {
+        alert("Produk berhasil dihapus.");
+        setCart((prevCart) =>
+          prevCart.map((transaction) => ({
+            ...transaction,
+            items: transaction.items.filter(
+              (item) => item.product_id !== productId
+            ),
+          })).filter((transaction) => transaction.items.length > 0)
+        );
+      }
+    } catch (err) {
+      console.error("Error deleting item:", err);
+      alert("Gagal menghapus produk. Silakan coba lagi.");
+    }
+  };
+
   if (loading) {
     return <p className="text-center text-gray-600 mt-4">Loading cart...</p>;
   }
@@ -114,12 +139,23 @@ const CartPage: React.FC = () => {
                   <p className="text-gray-800 font-semibold">
                     Subtotal: Rp {item.subtotal.toLocaleString()}
                   </p>
+                  <button
+                    onClick={() =>
+                      handleDeleteItem(localStorage.getItem("id")!, item.product_id)
+                    }
+                    className="bg-red-800 text-white rounded hover:bg-red-900"
+                  >
+                    <p className="m-2">Hapus</p>
+                  </button>
                 </div>
               ))}
-              <div className="border-t pt-2 mt-2">
+              <div className="border-t pt-2 mt-2 flex justify-between">
                 <p className="text-gray-800 font-bold">
                   Total Amount: Rp {transaction.total_amount.toLocaleString()}
                 </p>
+                <button className="bg-black text-white rounded hover:bg-gray-800">
+                  <p className="m-2">Pembayaran</p>
+                </button>
               </div>
             </div>
           </div>

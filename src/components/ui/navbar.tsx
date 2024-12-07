@@ -12,6 +12,7 @@ const Navbar = () => {
   const [radius, setRadius] = useState<string>(''); // State for radius selection
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State untuk status login
   const [isAgent, setIsAgent] = useState(false); // State untuk role agen
+  const [username, setUsername] = useState('');
 
   const router = useRouter();
 
@@ -23,9 +24,11 @@ const Navbar = () => {
     // Cek keberadaan access_token dan role di localStorage
     const token = localStorage.getItem('access_token');
     const role = localStorage.getItem('role');
+    const username = localStorage.getItem('username');
 
     setIsLoggedIn(!!token);
     setIsAgent(role === 'agen'); // Periksa apakah role adalah 'agen'
+    setUsername(username || '');
 
     // Mendapatkan lokasi pengguna
     if (navigator.geolocation) {
@@ -83,7 +86,7 @@ const Navbar = () => {
           <h1 className="text-white text-2xl font-bold">Golekin</h1>
         </Link>
         
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-6">
           {/* Tambahkan tombol Agen jika isAgent */}
           {isAgent && (
             <Link href="/agen" className='text-white hover:text-gray-300'>
@@ -95,6 +98,7 @@ const Navbar = () => {
           <a href="/cartpage" className="text-white hover:text-gray-300 flex items-center">
             <FaShoppingCart className="text-xl" />
           </a>
+          <p>{username}</p>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -108,10 +112,10 @@ const Navbar = () => {
             ) : (
               <>
                 <li>
-                  <Link href='/login'><Button className="bg-slate-600 hover:bg-slate-50">Masuk</Button></Link>
+                  <Link href='/login'><Button className="bg-slate-600">Masuk</Button></Link>
                 </li>
                 <li>
-                  <Link href='/register'><Button>Daftar</Button></Link>
+                  <Link href='/register'><Button className='bg-gray-500'>Daftar</Button></Link>
                 </li>
               </>
             )}
@@ -147,6 +151,7 @@ const Navbar = () => {
       {/* Menu Dropdown untuk Mobile */}
       {isMenuOpen && (
         <div className="md:hidden bg-gray-700 p-4">
+          <SearchBar />
           <ul className="flex flex-col space-y-2">
             {isAgent && (
               <li>
@@ -164,7 +169,7 @@ const Navbar = () => {
             ) : (
               <>
                 <li><Link href="/login"><Button className="bg-slate-600 hover:bg-slate-50">Masuk</Button></Link></li>
-                <li><Link href="/register"><Button>Daftar</Button></Link></li>
+                <li><Link href="/register"><Button className='bg-gray-600'>Daftar</Button></Link></li>
               </>
             )}
           </ul>

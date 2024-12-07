@@ -28,6 +28,7 @@ function Register() {
   const styles = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [pin, setPin] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -48,6 +49,25 @@ function Register() {
     libraries: ['places'],
   });
   const router = useRouter();
+
+  const validatePassword = (password: string): boolean => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    return regex.test(password);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    console.log(newPassword)
+
+    if (!validatePassword(newPassword)) {
+      setPasswordError(
+        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+      );
+    } else {
+      setPasswordError(null);
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -84,6 +104,17 @@ function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // if (!validatePassword(password)) {
+    //   setPasswordError(
+    //     "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
+    //   );
+    //   return;
+    // } else {
+    //   console.log('Password validation passed'); // Debug log
+    //   setPasswordError(null);
+    // }
+
     const uploadedImageUrl = await uploadImage();
 
     const data = {
@@ -160,6 +191,7 @@ function Register() {
                   className={classNames('position-select', styles.positionSelect)}
                 >
                   <option value="">Pilih</option>
+                  <option value="admin">Admin</option>
                   <option value="konsumen">Konsumen</option>
                   <option value="agen">Agen</option>
                   <option value="pedagang">Pedagang</option>
@@ -285,7 +317,7 @@ function Register() {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     className={classNames('placeholder-password', styles.placeHolderPassword)}
                   />
                   <button
@@ -296,6 +328,11 @@ function Register() {
                     {showPassword ? '🙈' : '👁️'}
                   </button>
                 </div>
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-2">
+                    {passwordError}
+                  </p>
+                )}
               </div>
 
               <div className={classNames('pin-enter', styles.pinEnter)}>

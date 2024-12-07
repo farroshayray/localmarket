@@ -50,6 +50,8 @@ function login() {
         router.push('/agen');
       } else if (response.role === 'driver') {
         router.push('/driver');
+      } else if (response.role === 'admin') {
+        router.push('/admin');
       }
     } catch (error: any) {
       console.error('Login gagal:', error.message);
@@ -85,6 +87,7 @@ function login() {
                 className={classNames('position-select', styles.positionSelect)}
               >
                 <option value="">Pilih</option>
+                <option value="admin">Admin</option>
                 <option value="konsumen">Konsumen</option>
                 <option value="agen">Agen</option>
                 <option value="pedagang">Pedagang</option>
