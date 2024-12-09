@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 
 interface ImageUploaderProps {
-  onUploadSuccess: (url: string) => void;
-  uploadUrl: string;
+  currentImageUrl: string; // Existing image URL
+  onUploadSuccess: (url: string) => void; // Callback to update parent with the new URL
+  uploadUrl: string; // API endpoint for image upload
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess, uploadUrl }) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  currentImageUrl,
+  onUploadSuccess,
+  uploadUrl,
+}) => {
+  const [imagePreview, setImagePreview] = useState<string | null>(currentImageUrl);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -39,9 +44,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess, uploadUr
         headers: { "Content-Type": "multipart/form-data" },
       });
       setUploading(false);
-      onUploadSuccess(response.data.url);
+      onUploadSuccess(response.data.url); // Pass the uploaded image URL back to the parent
       setMessage("Image uploaded successfully!");
-      
     } catch (error) {
       setUploading(false);
       console.error("Error uploading image:", error);
@@ -67,7 +71,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess, uploadUr
         </div>
       )}
       {uploading && <p className="text-gray-500 mt-2">Uploading...</p>}
-      {message && <p className={`mt-2 ${message.includes("success") ? "text-green-500" : "text-red-500"}`}>{message}</p>}
+      {message && (
+        <p
+          className={`mt-2 ${
+            message.includes("success") ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 };
