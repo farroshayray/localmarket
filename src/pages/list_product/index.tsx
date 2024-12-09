@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import useStyle from './style';
 import classNames from "classnames";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import Navbar from "@/components/ui/navbar";
 
 // Tipe data produk untuk TypeScript
 type Product = {
@@ -33,6 +35,8 @@ const ProductsPage = () => {
   };
 
   return (
+    <ProtectedRoute allowedRoles={["agen"]}>
+    <Navbar />
     <div className={classNames('container-tittle',styles.containerTittle)}>
       {/* Judul Halaman */}
       <h1 className={classNames('tittle',styles.tittle)}>Product List Golekin</h1>
@@ -76,6 +80,7 @@ const ProductsPage = () => {
         ))}
       </div>
     </div>
+    </ProtectedRoute>
   );
 };
 
