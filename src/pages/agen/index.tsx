@@ -126,7 +126,7 @@ const Agen: React.FC = () => {
                 groupedTransactions.map((group) => (
                   <div key={group.consumer_id} className="border border-gray-300 rounded-lg p-4 mb-4">
                     <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                      Consumer: {group.consumer_name}
+                      Konsumen: {group.consumer_name}
                     </h2>
                     {group.transactions.map((transaction) => (
                       <div key={transaction.id} className="mb-4">

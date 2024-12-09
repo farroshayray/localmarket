@@ -129,10 +129,10 @@ const CartPage: React.FC = () => {
                         {item.product_description}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Price: Rp {item.product_price.toLocaleString()}
+                        Harga: Rp {item.product_price.toLocaleString()}
                       </p>
                       <p className="text-sm text-gray-600">
-                        Quantity: {item.quantity}
+                        Jumlah: {item.quantity}
                       </p>
                     </div>
                   </div>

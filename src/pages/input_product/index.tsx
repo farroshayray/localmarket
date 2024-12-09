@@ -18,6 +18,7 @@ import classNames from "classnames";
 import axios from "axios";
 import { ProductService } from "@/services/productService";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useRouter } from "next/router";
 
 const productSchema = z.object({
   name: z.string().min(1, "Nama produk wajib diisi"),
@@ -38,6 +39,8 @@ export function ProductForm() {
   const [categories, setCategories] = useState<{ id: number; category_name: string }[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  const router = useRouter();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -119,6 +122,7 @@ export function ProductForm() {
 
       form.reset();
       setImagePreview(null);
+      router.push('/list_product')
     } catch (error) {
       if (error instanceof Error) {
         console.error("Error:", error.message);

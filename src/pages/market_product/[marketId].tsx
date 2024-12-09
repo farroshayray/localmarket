@@ -14,6 +14,7 @@ interface Product {
 
 const MarketProductPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [marketName, setMarketName] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -28,6 +29,7 @@ const MarketProductPage: React.FC = () => {
         setLoading(true);
         try {
           const response = await axios.get(`${API_BASE_URL}/products/agen_products/${marketId}`);
+          const market_name = response.data.market_name;
           const fetchedProducts = response.data.products.map((product: any) => ({
             id: product.id,
             title: product.product_name,
@@ -36,6 +38,7 @@ const MarketProductPage: React.FC = () => {
             imageUrl: product.image_url,
           }));
           setProducts(fetchedProducts);
+          setMarketName(market_name);
         } catch (err: any) {
           if (axios.isAxiosError(err) && err.response?.status === 404) {
             setError('No products found for this market.');
@@ -74,7 +77,7 @@ const MarketProductPage: React.FC = () => {
     <>
     <Navbar />
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Produk di Pasar</h1>
+      <h1 className="text-2xl font-bold mb-4 ml-4 mt-10">Produk di {marketName}</h1>
       <div className={styles.productGrid}>
         {products.map((product) => (
           <div
