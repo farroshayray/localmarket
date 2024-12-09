@@ -41,6 +41,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUploadSuccess, uploadUr
       setUploading(false);
       onUploadSuccess(response.data.url);
       setMessage("Image uploaded successfully!");
+      
     } catch (error) {
       setUploading(false);
       console.error("Error uploading image:", error);
