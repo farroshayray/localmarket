@@ -1,15 +1,13 @@
-import { CardDescription } from "@/components/ui/card";
-
 const useStyles = () => {
     return {
         // judul
         containerTittle: "container mx-auto py-10",
         tittle: "text-2xl font-bold mb-6",
 
-        //list space
+        // list space
         listSpace: "space-y-6",
 
-        //card
+        // card
         card: "flex items-center gap-4 p-4 shadow-md border rounded-lg",
         cardImage: "w-24 h-24 object-cover rounded-md",
         cardContent: "flex-1",
@@ -18,7 +16,9 @@ const useStyles = () => {
         cardPrice: "text-gray-700 mb-2",
         cardFont: "font-medium",
 
-    }
-}
+        // card stock
+        cardStock: "text-green-600 font-medium mb-2", // Add styling for stock
+    };
+};
 
 export default useStyles;
