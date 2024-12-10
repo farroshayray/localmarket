@@ -107,7 +107,7 @@ const CartPage: React.FC = () => {
         {cart.map((transaction) => (
           <div key={transaction.id} className="mb-6">
             <h2 className="text-lg font-semibold text-gray-700 mb-2">
-              Market: {transaction.market_name}
+              Agen: {transaction.market_name}
             </h2>
             <div className="bg-gray-100 p-4 rounded-lg">
               {transaction.items.map((item) => (
@@ -155,7 +155,7 @@ const CartPage: React.FC = () => {
                 </p>
                 <button
                   onClick={() => router.push(`/transaction_detail/${transaction.id}`)}
-                  className="bg-black text-white rounded hover:bg-gray-800"
+                  className="bg-blue-800 text-white rounded hover:bg-blue-950"
                 >
                   <p className="m-2">Pembayaran</p>
                 </button>
