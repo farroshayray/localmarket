@@ -153,7 +153,10 @@ const CartPage: React.FC = () => {
                 <p className="text-gray-800 font-bold">
                   Total Amount: Rp {transaction.total_amount.toLocaleString()}
                 </p>
-                <button className="bg-black text-white rounded hover:bg-gray-800">
+                <button
+                  onClick={() => router.push(`/transaction_detail/${transaction.id}`)}
+                  className="bg-black text-white rounded hover:bg-gray-800"
+                >
                   <p className="m-2">Pembayaran</p>
                 </button>
               </div>
