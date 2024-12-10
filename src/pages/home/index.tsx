@@ -5,6 +5,7 @@ import PromoCarousel from "./promo_carousel";
 import MarketList from "./market_list";
 import CategoryList from "./category_list";
 import ProductGrid from "./product_grid";
+import Home_topupBalance from "@/components/ui/home_topupBalance";
 
 // Define the Product type
 interface Product {
@@ -24,10 +25,7 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className="promo-container flex flex-col">
-        <h1 className="mt-3 mb-3 mx-auto text-xl">Lihat Promo Hari Ini!</h1>
-        <PromoCarousel />
-      </div>
+      <Home_topupBalance />
       <div className="market-list-container flex flex-col mt-5 p-10">
         <h1 className="mt-3 mb-3 mx-auto text-xl">Daftar Pasar</h1>
         <MarketList />
