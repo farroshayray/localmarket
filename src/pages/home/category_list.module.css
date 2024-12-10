@@ -4,7 +4,7 @@
     background-color: #fff; /* Warna latar belakang putih */
     border-radius: 8px; /* Sudut membulat */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Bayangan halus */
-    margin: 10px 4px;
+    margin: 10px 6px;
     text-align: center; /* Teks di tengah */
     transition: transform 0.2s; /* Transisi saat hover */
     height: 24rem;
