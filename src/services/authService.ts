@@ -11,6 +11,7 @@ export const registerUser = async (data: {
   pin: string;
   role: string;
   phone_number: string;
+  agen_id?: string;
   location?: string; //{ lat: number; lng: number };
 }) => {
     try {
