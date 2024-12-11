@@ -42,6 +42,7 @@ function login() {
       localStorage.setItem('fullname', response.fullname);
       localStorage.setItem('id', response.id);
       localStorage.setItem('image_url', response.image_url);
+      localStorage.setItem('agen_id', response.agen_id);
       alert(response.message);
       if (response.role === 'konsumen') {
         router.push('/home');
