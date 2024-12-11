@@ -33,10 +33,10 @@ interface CartTransaction {
 
 const TransactionDetailPage: React.FC = () => {
   const router = useRouter();
-  const { id } = router.query; // Extract transaction_id from the URL
+  const { id } = router.query;
   const [transaction, setTransaction] = useState<CartTransaction | null>(null);
   const [shippingCost, setShippingCost] = useState<number>(0);
-  const [balance, setBalance] = useState<number | null>(null); // State for balance
+  const [balance, setBalance] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -78,16 +78,44 @@ const TransactionDetailPage: React.FC = () => {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem("access_token");
-      const response = await axios.post(
-        `${API_BASE_URL}/transaction/pay/${transaction?.id}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+      if (!transaction) return;
+
+      const amount_update_balance = transaction.total_amount + Number(shippingCost);
+      // Deduct balance
+      const deductBalanceResponse = await axios.put(
+        `${API_BASE_URL}/user/update_balance`,
+        {
+          amount: amount_update_balance,
+          plus_minus: "minus",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
-      alert(response.data.message || "Payment successful!");
-      router.push("/transactions"); // Redirect to transactions page
-    } catch (err) {
-      console.error("Error processing payment:", err);
-      alert("Failed to process payment. Please try again.");
+
+      alert(deductBalanceResponse.data.message);
+
+      // Update transaction status
+      const updateStatusResponse = await axios.put(
+        `${API_BASE_URL}/transaction/update_status`,
+        {
+          transaction_id: transaction.id,
+          status: "ordered",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      alert(updateStatusResponse.data.message);
+      router.push("/home");
+    } catch (err: any) {
+      if (err.response?.data?.error) {
+        alert(err.response.data.error);
+      } else {
+        console.error("Error during payment process:", err);
+        alert("Failed to process payment. Please try again.");
+      }
     }
   };
 
@@ -181,7 +209,7 @@ const TransactionDetailPage: React.FC = () => {
                   Saldo Anda: <span className="text-green-600">Rp {balance.toLocaleString()}</span>
                 </p>
                 <p className="text-gray-600 mt-2 ml-4">
-                  {balance >= totalCost ? <div className="text-green-400">saldo cukup</div> : <div className="text-red-400">saldo kurang, silahkan topup saldo terlebih dahulu</div>}
+                  {balance >= totalCost ? <span className="text-green-400">Saldo cukup</span> : <span className="text-red-400">Saldo kurang, silahkan topup saldo terlebih dahulu</span>}
                 </p>
               </div>
             )}
@@ -189,7 +217,7 @@ const TransactionDetailPage: React.FC = () => {
           <Button
             onClick={handlePayment}
             className="bg-green-600 hover:bg-green-700 my-auto"
-            disabled={balance !== null && balance < totalCost} // Disable if balance is insufficient
+            disabled={balance !== null && balance < totalCost}
           >
             <p className="text-white p-3">Bayar</p>
           </Button>
