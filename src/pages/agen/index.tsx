@@ -22,6 +22,7 @@ interface Transaction {
   items: Product[];
   created_at: string;
   status: string;
+  shipping_cost: number;
 }
 
 interface GroupedTransaction {
@@ -42,26 +43,30 @@ const Agen: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<string>("cart");
   const [loading, setLoading] = useState<boolean>(true);
   const [noDataMessage, setNoDataMessage] = useState<string>("");
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         setLoading(true);
-        const agentId = localStorage.getItem("id"); // Assuming agent ID is stored in localStorage
+        const agentId = localStorage.getItem("id");
         if (!agentId) {
           throw new Error("Agent ID not found.");
         }
-        if (selectedTab === "cart") {
-          const response = await axios.get(
-            `http://127.0.0.1:5000/transaction/status_cart/agent/${agentId}`
-          );
-          if (response.data.grouped_transactions?.length > 0) {
-            setGroupedTransactions(response.data.grouped_transactions);
-            setNoDataMessage(""); // Clear message if data exists
-          } else {
-            setGroupedTransactions([]);
-            setNoDataMessage(response.data.message || "No transactions found.");
-          }
+
+        const endpoint =
+          selectedTab === "cart"
+            ? `/transaction/status_cart/agent/${agentId}`
+            : `/transaction/status_${selectedTab}/agent/${agentId}`;
+
+        const response = await axios.get(`${API_BASE_URL}${endpoint}`);
+
+        if (response.data.grouped_transactions?.length > 0) {
+          setGroupedTransactions(response.data.grouped_transactions);
+          setNoDataMessage("");
+        } else {
+          setGroupedTransactions([]);
+          setNoDataMessage(response.data.message || "No transactions found.");
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
@@ -80,6 +85,32 @@ const Agen: React.FC = () => {
 
     fetchTransactions();
   }, [selectedTab]);
+
+  const handleProcessOrder = async (transactionId: number) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await axios.put(
+        `${API_BASE_URL}/transaction/update_status`,
+        { transaction_id: transactionId, status: "processed" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert(response.data.message || "Order processed successfully.");
+
+      setGroupedTransactions((prev) =>
+        prev.map((group) => ({
+          ...group,
+          transactions: group.transactions.filter((t) => t.id !== transactionId),
+        })).filter((group) => group.transactions.length > 0)
+      );
+    } catch (error: any) {
+      console.error("Error processing order:", error);
+      alert(
+        error.response?.data?.error ||
+          "Failed to process order. Please try again later."
+      );
+    }
+  };
 
   return (
     <ProtectedRoute allowedRoles={["agen"]}>
@@ -118,43 +149,57 @@ const Agen: React.FC = () => {
           {/* Transaction List */}
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
-          ) : selectedTab === "cart" ? (
+          ) : groupedTransactions.length === 0 ? (
+            <p className="text-center text-gray-500">{noDataMessage}</p>
+          ) : (
             <div className="bg-white shadow-md rounded-lg p-6">
-              {groupedTransactions.length === 0 ? (
-                <p className="text-center text-gray-500">{noDataMessage}</p>
-              ) : (
-                groupedTransactions.map((group) => (
-                  <div key={group.consumer_id} className="border border-gray-300 rounded-lg p-4 mb-4">
-                    <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                      Konsumen: {group.consumer_name}
-                    </h2>
-                    {group.transactions.map((transaction) => (
-                      <div key={transaction.id} className="mb-4">
-                        <h3 className="text-gray-700 font-medium mb-2">
-                          Transaction ID: {transaction.id} - Market: {transaction.market_name}
-                        </h3>
-                        <ul className="list-disc list-inside text-gray-700">
-                          {transaction.items.map((item) => (
-                            <li key={item.id}>
-                              {item.product_name} - {item.quantity} pcs (
-                              Rp {item.product_price.toLocaleString()})
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="text-gray-800 font-bold mt-2">
-                          Total Amount: Rp {transaction.total_amount.toLocaleString()}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Created At: {new Date(transaction.created_at).toLocaleString()}
-                        </p>
+              {groupedTransactions.map((group) =>
+                group.transactions.map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="border border-gray-300 rounded-lg p-4 mb-4 flex flex-col sm:flex-row justify-between"
+                  >
+                    <div>
+                      <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                        Konsumen: {group.consumer_name}
+                      </h2>
+                      <h3 className="text-gray-700 font-medium mb-2">
+                        Transaction ID: {transaction.id} - Market: {transaction.market_name}
+                      </h3>
+                      <ul className="list-disc list-inside text-gray-700">
+                        {transaction.items.map((item) => (
+                          <li key={item.id}>
+                            {item.product_name} - {item.quantity} pcs @Rp. {item.product_price.toLocaleString()} = (Rp. 
+                            {item.subtotal.toLocaleString()},-)
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-gray-600 font-bold mt-2">
+                        Subtotal Harga Barang: Rp {transaction.total_amount.toLocaleString()}
+                      </p>
+                      <ul>
+                        <li className="list-disc list-inside text-gray-700">Ongkos kirim: Rp {transaction.shipping_cost ? transaction.shipping_cost.toLocaleString() : '0'}</li>
+                      </ul>
+                      <p className="text-gray-800 font-bold mt-2 border-2 p-1 rounded-xl border-black">Total Biaya: Rp. {transaction.total_amount && transaction.shipping_cost
+                        ? (transaction.total_amount + transaction.shipping_cost).toLocaleString() : '0'},-</p>
+                      <p className="text-sm text-gray-500">
+                        Transaksi tanggal: {new Date(transaction.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                    {selectedTab === "ordered" && (
+                      <div className="my-auto">
+                        <Button
+                          className="bg-blue-700 hover:bg-blue-800"
+                          onClick={() => handleProcessOrder(transaction.id)}
+                        >
+                          Proses Order
+                        </Button>
                       </div>
-                    ))}
+                    )}
                   </div>
                 ))
               )}
             </div>
-          ) : (
-            <p className="text-center text-gray-500">Feature under development for this tab.</p>
           )}
         </div>
       </div>

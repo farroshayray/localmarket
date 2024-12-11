@@ -25,6 +25,7 @@ const ProductsPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,7 +37,7 @@ const ProductsPage = () => {
         }
 
         const response = await axios.get(
-          `http://127.0.0.1:5000/products/agen_products/${agentId}`
+          `${API_BASE_URL}/products/agen_products/${agentId}`
         );
         
         if (response.data.products) {
@@ -62,7 +63,7 @@ const ProductsPage = () => {
 
     try {
       const token = localStorage.getItem("access_token"); // Retrieve the access token from localStorage
-      await axios.delete(`http://127.0.0.1:5000/products/delete_product/${id}`, {
+      await axios.delete(`${API_BASE_URL}/products/delete_product/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`, // Add Authorization header
         },

@@ -23,17 +23,17 @@ interface Product {
 const Home = () => {
 
   return (
-    <div>
+    <div className="">
       <Navbar />
-      <div className="mt-4 py-4 flex flex-col rounded-xl p-1 sm:flex-col md:flex-row h-96">
-        <div className="md:w-1/4 md:mr-2"><Home_topupBalance /></div>
+      <div className="mt-4 py-4 flex flex-col rounded-xl p-1 sm:flex-col md:flex-row h-fit">
+        <div className="md:w-1/4 md:mr-2 mb-2"><Home_topupBalance /></div>
         <div className="md:w-3/4 p-2 rounded-xl bg-white bg-opacity-20">
           <p>Kategori</p>
           <div><CategoryCarousel /></div>
         </div>
         
       </div>
-      <div className="market-list-container flex flex-col p-10 mt-32 md:mt-0 bg-white bg-opacity-20 rounded-xl">
+      <div className="market-list-container flex flex-col p-10 mt-4 md:mt-0 bg-white bg-opacity-20 rounded-xl">
         <h1 className="mt-3 mb-3 mx-auto text-3xl">Daftar Pasar</h1>
         <MarketList />
       </div>

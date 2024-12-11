@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GoogleMap, MarkerF, useLoadScript, Autocomplete } from '@react-google-maps/api';
@@ -40,6 +40,8 @@ function Register() {
   const [markerPosition, setMarkerPosition] = useState(center);
   const [mapCenter, setMapCenter] = useState(center);
   const [image, setImage] = useState<File | null>(null);
+  const [agents, setAgents] = useState<{ id: number; fullname: string }[]>([]);
+  const [agenId, setAgenId] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -54,6 +56,19 @@ function Register() {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
     return regex.test(password);
   };
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/user/agents`);
+        setAgents(response.data.agents.map((agent: any) => ({ id: agent.id, fullname: agent.fullname })));
+      } catch (error) {
+        console.error("Failed to fetch agents:", error);
+      }
+    };
+  
+    fetchAgents();
+  }, []);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -105,16 +120,6 @@ function Register() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // if (!validatePassword(password)) {
-    //   setPasswordError(
-    //     "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character."
-    //   );
-    //   return;
-    // } else {
-    //   console.log('Password validation passed'); // Debug log
-    //   setPasswordError(null);
-    // }
-
     const uploadedImageUrl = await uploadImage();
 
     const data = {
@@ -128,6 +133,7 @@ function Register() {
       phone_number: phoneNumber,
       location: JSON.stringify(markerPosition),
       image_url: uploadedImageUrl,
+      agen_id: agenId ? agenId : undefined,
     };
 
     try {
@@ -255,7 +261,7 @@ function Register() {
                 />
               </div>
 
-              {(selectedRole === 'pedagang' || selectedRole === 'driver' || selectedRole === 'agen') && (
+              {(selectedRole === 'agen') && (
                 <div className={classNames('nama-enter', styles.namaEnter)}>
                   <Label htmlFor="tempatUsaha" className={classNames('nama-text', styles.namaText)}>
                     Tempat Usaha
@@ -306,6 +312,26 @@ function Register() {
                   </div>
                 </div>
               )}
+              {selectedRole === "driver" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="agen_id" className={classNames('position-text', styles.positionText)}>
+                      Pilih Agen : 
+                    </Label>
+                    <select
+                      id="agen_id"
+                      onChange={(e) => setAgenId(e.target.value)}
+                      className={classNames('position-select', styles.positionSelect)}
+                      required
+                    >
+                      <option value=""><small className='text-xs'>Pasar...</small></option>
+                      {agents.map((agent) => (
+                        <option key={agent.id} value={agent.id}>
+                          {agent.fullname}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
 
               <div className={classNames('password-enter', styles.passwordEnter)}>
                 <Label htmlFor="password" className={classNames('password-text', styles.passwordText)}>
