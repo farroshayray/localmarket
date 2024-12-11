@@ -13,6 +13,7 @@ const Navbar = () => {
   const [radius, setRadius] = useState<string>('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAgent, setIsAgent] = useState(false);
+  const [isDriver, setIsDriver] = useState(false);
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState('/default-user.png');
 
@@ -30,6 +31,7 @@ const Navbar = () => {
 
     setIsLoggedIn(!!token);
     setIsAgent(role === 'agen');
+    setIsDriver(role === 'driver');
     setUsername(username || '');
 
     if (imageUrl) {
@@ -60,6 +62,7 @@ const Navbar = () => {
     router.push('/login');
     setIsLoggedIn(false);
     setIsAgent(false);
+    setIsDriver(false);
   };
 
   const handleRadiusChange = (selectedRadius: string) => {
@@ -77,6 +80,11 @@ const Navbar = () => {
           {isAgent && (
             <Link href="/agen" className="text-white hover:text-gray-300">
               Agen
+            </Link>
+          )}
+          {isDriver && (
+            <Link href="/driver" className="text-white hover:text-gray-300">
+              Driver
             </Link>
           )}
           <CategoryDropdown />
