@@ -96,11 +96,18 @@ const CartPage: React.FC = () => {
     setCart((prevCart) =>
       prevCart.map((transaction) => {
         if (transaction.id === transactionId) {
+          const updatedItems = transaction.items.map((item) =>
+            item.id === itemId
+              ? { ...item, quantity, subtotal: quantity * item.product_price }
+              : item
+          );
+
+          const updatedTotalAmount = updatedItems.reduce((sum, item) => sum + item.subtotal, 0);
+
           return {
             ...transaction,
-            items: transaction.items.map((item) =>
-              item.id === itemId ? { ...item, quantity, subtotal: quantity * item.product_price } : item
-            ),
+            items: updatedItems,
+            total_amount: updatedTotalAmount,
           };
         }
         return transaction;
@@ -162,7 +169,7 @@ const CartPage: React.FC = () => {
             <h2 className="text-lg font-semibold text-gray-700 mb-2">
               Agen: {transaction.market_name}
             </h2>
-            <div className=" p-4 rounded-lg bg-gray-50">
+            <div className="p-4 rounded-lg bg-gray-50">
               {transaction.items.map((item) => (
                 <div
                   key={item.id}

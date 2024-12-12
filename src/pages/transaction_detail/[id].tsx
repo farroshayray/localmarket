@@ -6,6 +6,8 @@ import Navbar from "@/components/ui/navbar";
 import SetDeliveryLocation from "@/components/ui/setDeliveryLocation";
 import UpdateDescription from "@/components/ui/updateDescription";
 import { Button } from "@/components/ui/button";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface CartItem {
   id: number;
@@ -37,6 +39,7 @@ const TransactionDetailPage: React.FC = () => {
   const [transaction, setTransaction] = useState<CartTransaction | null>(null);
   const [shippingCost, setShippingCost] = useState<number>(0);
   const [balance, setBalance] = useState<number | null>(null);
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -82,32 +85,22 @@ const TransactionDetailPage: React.FC = () => {
 
       const amount_update_balance = transaction.total_amount + Number(shippingCost);
       // Deduct balance
-      const deductBalanceResponse = await axios.put(
-        `${API_BASE_URL}/user/update_balance`,
+      const deductBalanceAndStatusResponse = await axios.put(
+        `${API_BASE_URL}/transaction/update_balance_and_status`,
         {
           amount: amount_update_balance,
           plus_minus: "minus",
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      alert(deductBalanceResponse.data.message);
-
-      // Update transaction status
-      const updateStatusResponse = await axios.put(
-        `${API_BASE_URL}/transaction/update_status`,
-        {
           transaction_id: transaction.id,
           status: "ordered",
+          pin_hash: pin,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      alert(updateStatusResponse.data.message);
+      alert(deductBalanceAndStatusResponse.data.message);
+
       router.push("/home");
     } catch (err: any) {
       if (err.response?.data?.error) {
@@ -214,9 +207,30 @@ const TransactionDetailPage: React.FC = () => {
               </div>
             )}
           </div>
+          
+        </div>
+      </div>
+      <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+      <div className="flex flex-col">
+        <div className=''>
+          <Label htmlFor="pin" className='text-black'>
+            PIN (6 Angka)
+          </Label>
+          <Input
+            id="pin"
+            type="password"
+            placeholder="Masukkan 6 angka PIN"
+            value={pin}
+            onChange={(e) => {
+              const newValue = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+              setPin(newValue);
+            }}
+            className='text-gray-800 border-gray-700 mb-3'
+          />
+        </div>
           <Button
             onClick={handlePayment}
-            className="bg-green-600 hover:bg-green-700 my-auto"
+            className="bg-green-600 hover:bg-green-700 my-auto mx-auto"
             disabled={balance !== null && balance < totalCost}
           >
             <p className="text-white p-3">Bayar</p>
