@@ -15,12 +15,26 @@ interface Product {
   user_id: number;
 }
 
+interface ReviewDetails {
+  created_at: string;
+  review_text: string;
+  star_rating: number,
+  user_id: number;
+  user_fullname: string;
+}
+
+interface Reviews {
+  average_rating: number;
+  details: ReviewDetails[];
+}
+
 const ProductDetail: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [product, setProduct] = useState<Product | null>(null);
   const [categoryName, setCategoryName] = useState<string>("");
   const [shopName, setShopName] = useState<string>("");
+  const [reviews, setReviews] = useState<Reviews | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isBuyer, setIsBuyer] = useState(false);
@@ -32,10 +46,9 @@ const ProductDetail: React.FC = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/products/product/${id}`);
-        const { product, category_name, shop_name } = response.data;
-        const role = localStorage.getItem('role');
-        setIsBuyer(role === 'konsumen');
-        console.log(response)
+        const { product, category_name, shop_name, reviews } = response.data;
+        const role = localStorage.getItem("role");
+        setIsBuyer(role === "konsumen");
 
         setProduct({
           id: product.id,
@@ -50,6 +63,7 @@ const ProductDetail: React.FC = () => {
         });
         setCategoryName(category_name);
         setShopName(shop_name);
+        setReviews(reviews);
       } catch (err) {
         setError("Failed to fetch product details. Please try again later.");
         console.error("Error fetching product details:", err);
@@ -63,7 +77,7 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = async () => {
     try {
-      const userId = localStorage.getItem("id"); // Assuming user_id is stored in localStorage
+      const userId = localStorage.getItem("id");
       if (!userId) {
         alert("Please log in to add items to your cart.");
         router.push("/login");
@@ -75,12 +89,18 @@ const ProductDetail: React.FC = () => {
         quantity: 1,
       };
 
-      const response = await axios.post(`${API_BASE_URL}/cart/add/${userId}`, payload);
+      await axios.post(`${API_BASE_URL}/cart/add/${userId}`, payload);
       alert("Product successfully added to cart!");
     } catch (err) {
       console.error("Error adding to cart:", err);
       alert("Failed to add product to cart. Please try again.");
     }
+  };
+
+  const renderStars = (rating: number) => {
+    const filledStars = "\u2605".repeat(Math.floor(rating));
+    const emptyStars = "\u2606".repeat(5 - Math.floor(rating));
+    return `${filledStars}${emptyStars}`;
   };
 
   if (loading) {
@@ -128,14 +148,45 @@ const ProductDetail: React.FC = () => {
 
             {/* Add to Cart Button */}
             {isBuyer && (
-            <button
-              onClick={handleAddToCart}
-              className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-            >
-              Masukan Keranjang
-            </button>
+              <button
+                onClick={handleAddToCart}
+                className="mt-6 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              >
+                Masukan Keranjang
+              </button>
             )}
           </div>
+        </div>
+      </div>
+      <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+        {/* Reviews and Stars Section */}
+        <div className="mt-6 bg-gray-900 p-4 rounded-lg">
+          <h2 className="text-lg font-bold text-gray-200">Reviews</h2>
+          {reviews?.average_rating ? (
+            <>
+              <p className="text-gray-200 flex">
+                Average Rating:
+                <span className="text-yellow-400 mx-2">{renderStars(reviews.average_rating)}</span>
+                ({reviews.average_rating.toFixed(1)}/5)
+              </p>
+            </>
+          ) : (
+            <p className="text-gray-500 mt-2">No ratings yet.</p>
+          )}
+          {reviews && reviews.details.length > 0 ? (
+            <ul className="mt-2">
+              {reviews.details.map((review, index) => (
+                <li key={index} className="mb-4 bg-gray-200 p-2 rounded-lg my-1">
+                  <p className="text-yellow-400">{renderStars(review.star_rating)}</p>
+                  <p className="text-gray-600 mt-2">"{review.review_text}"</p>
+                  <p className="text-sm text-gray-500 text-sm mt-2">Pembeli: {review.user_fullname}</p>
+                  <small className="text-gray-600">Dibuat pada: {review.created_at}</small>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 mt-2">No reviews yet.</p>
+          )}
         </div>
       </div>
     </>
