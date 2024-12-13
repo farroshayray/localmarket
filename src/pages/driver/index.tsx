@@ -4,6 +4,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { MapPinIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
 
 interface Product {
   id: number;
@@ -38,6 +39,8 @@ const Driver: React.FC = () => {
   const [noDataMessage, setNoDataMessage] = useState<string>("");
   const [locations, setLocations] = useState<{ [key: number]: string }>({});
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  const router = useRouter();
 
   const reverseGeocode = async (lat: number, lng: number): Promise<string> => {
     try {
@@ -77,10 +80,12 @@ const Driver: React.FC = () => {
   const handleCompleteOrder = async (transactionId: number) => {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await axios.put(`${API_BASE_URL}/transaction/update_status`, {
+      console.log('token',token);
+      const response = await axios.put(`${API_BASE_URL}/transaction/update_status_completed`, {
         transaction_id: transactionId,
-        status: "completed",
       }, { headers: { Authorization: `Bearer ${token}` } });
+      
+      console.log('response',response);
       alert(response.data.message || "Order completed successfully.");
       setTransactions((prev) => prev.filter((t) => t.id !== transactionId));
     } catch (error: any) {
@@ -93,15 +98,6 @@ const Driver: React.FC = () => {
   };
 
   const updateDriverLocation = async () => {
-    // console.log(transactions);
-    // const validTransactions = transactions.filter(
-    //   (transaction) => transaction.status === 'taken'
-    // );
-    // console.log('validTransactions',validTransactions);
-    // if (validTransactions.length === 0) {
-    //   console.log("No valid transactions in 'taken' tab. Skipping location update.");
-    //   return;
-    // }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -109,16 +105,23 @@ const Driver: React.FC = () => {
           const currentLng = position.coords.longitude;
           const token = localStorage.getItem('access_token');
           const driver_id = localStorage.getItem('id');
-          const updatePromises = transactions.map((transaction) => {
-            return axios.put(`${API_BASE_URL}/transaction/update_driver_location`, {
+          // const updatePromises = transactions.map((transaction) => {
+          //   return axios.put(`${API_BASE_URL}/transaction/update_driver_location`, {
+          //     driver_id: driver_id,
+          //     driver_location: JSON.stringify({lat: currentLat,lng: currentLng}),
+          //   }, { headers: { Authorization: `Bearer ${token}` }});
+          // });
+
+          try {
+            // await Promise.all(updatePromises);
+            const driver_id = localStorage.getItem('id');
+            const token = localStorage.getItem('access_token');
+            await axios.put(`${API_BASE_URL}/transaction/update_driver_location`, {
               driver_id: driver_id,
               driver_location: JSON.stringify({lat: currentLat,lng: currentLng}),
             }, { headers: { Authorization: `Bearer ${token}` }});
-          });
-
-          try {
-            await Promise.all(updatePromises);
             console.log("Driver location updated for all transactions.");
+            console.log('driver location:')
           } catch (error) {
             console.error("Error updating driver locations:", error);
           }
@@ -228,6 +231,7 @@ const Driver: React.FC = () => {
       );
 
       alert(response.data.message || "Order taken successfully.");
+      router.reload();
 
       // setTransactions((prev) => prev.filter((t) => t.id !== transactionId));
     } catch (error: any) {
@@ -244,7 +248,7 @@ const Driver: React.FC = () => {
       <Navbar />
       <div className="bg-gray-100 min-h-screen py-6">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Driver Orders</h1>
+          <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Orderan Driver</h1>
 
           {/* Tabs */}
           <div className="flex justify-center space-x-4 mb-6">
@@ -277,7 +281,7 @@ const Driver: React.FC = () => {
                 >
                   <div>
                     <h3 className="text-gray-700 font-medium mb-2">
-                      Transaction ID: {transaction.id} - Market: {transaction.market_name}
+                      ID Transaksi: {transaction.id} - Agen: {transaction.market_name}
                     </h3>
                     <ul className="list-disc list-inside text-gray-700">
                       {transaction.items.map((item) => (
