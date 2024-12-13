@@ -14,6 +14,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAgent, setIsAgent] = useState(false);
   const [isDriver, setIsDriver] = useState(false);
+  const [isConsumer, setIsConsumer] = useState(false);
   const [username, setUsername] = useState('');
   const [profileImage, setProfileImage] = useState('/default-user.png');
 
@@ -32,6 +33,7 @@ const Navbar = () => {
     setIsLoggedIn(!!token);
     setIsAgent(role === 'agen');
     setIsDriver(role === 'driver');
+    setIsConsumer(role === 'konsumen');
     setUsername(username || '');
 
     if (imageUrl) {
@@ -63,6 +65,7 @@ const Navbar = () => {
     setIsLoggedIn(false);
     setIsAgent(false);
     setIsDriver(false);
+    setIsConsumer(false);
   };
 
   const handleRadiusChange = (selectedRadius: string) => {
@@ -85,6 +88,11 @@ const Navbar = () => {
           {isDriver && (
             <Link href="/driver" className="text-white hover:text-gray-300">
               Driver
+            </Link>
+          )}
+          {isConsumer && (
+            <Link href="/transaction_list" className="text-white hover:text-gray-300">
+              Transaksi Anda
             </Link>
           )}
           <CategoryDropdown />
