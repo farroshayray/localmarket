@@ -66,13 +66,13 @@ const Agen: React.FC = () => {
           setNoDataMessage("");
         } else {
           setGroupedTransactions([]);
-          setNoDataMessage(response.data.message || "No transactions found.");
+          setNoDataMessage(response.data.message || "Tidak ada transaksi.");
         }
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           setGroupedTransactions([]);
           setNoDataMessage(
-            error.response.data.message || "No transactions found for this agent."
+            error.response.data.message || "Belum ada transaksi untuk Agen ini."
           );
         } else {
           console.error("Error fetching transactions:", error);
@@ -117,15 +117,18 @@ const Agen: React.FC = () => {
       <Navbar />
       <div className="bg-gray-100 min-h-screen py-6">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Agen Transactions</h1>
+          <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Transaksi Agen</h1>
 
           {/* Feature buttons */}
           <div className="flex justify-center mb-4">
             <Link href="/input_product">
-              <Button className="mr-4 bg-gray-200 text-black hover:bg-gray-300">Input Product</Button>
+              <Button className="mr-4 bg-gray-200 text-black hover:bg-gray-300">Tambah Produk</Button>
             </Link>
             <Link href="/list_product">
-              <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Products</Button>
+              <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Produk Anda</Button>
+            </Link>
+            <Link href="/input_promotion">
+              <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Promosi Anda</Button>
             </Link>
           </div>
 
@@ -164,7 +167,7 @@ const Agen: React.FC = () => {
                         Konsumen: {group.consumer_name}
                       </h2>
                       <h3 className="text-gray-700 font-medium mb-2">
-                        Transaction ID: {transaction.id} - Market: {transaction.market_name}
+                        ID Transaksi: {transaction.id} - Agen: {transaction.market_name}
                       </h3>
                       <ul className="list-disc list-inside text-gray-700">
                         {transaction.items.map((item) => (

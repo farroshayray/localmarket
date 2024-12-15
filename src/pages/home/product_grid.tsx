@@ -3,13 +3,19 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import styles from './product_grid.module.css';
 
-// Define Product interface
+// Define Product and Promotion interfaces
+interface Promotion {
+  scheme: string;
+  scheme_percentage: number;
+}
+
 interface Product {
   id: number;
   title: string;
   description: string;
   price: number;
   imageUrl: string;
+  promotion: Promotion | null;
 }
 
 const ProductGrid: React.FC = () => {
@@ -29,6 +35,10 @@ const ProductGrid: React.FC = () => {
           description: product.description,
           price: product.price,
           imageUrl: product.image_url,
+          promotion: product.promotion ? {
+            scheme: product.promotion.scheme,
+            scheme_percentage: product.promotion.scheme_percentage,
+          } : null,
         }));
         setProducts(fetchedProducts);
       } catch (err) {
@@ -41,7 +51,6 @@ const ProductGrid: React.FC = () => {
 
     fetchProducts();
   }, []);
-
 
   const handleProductClick = (id: number) => {
     router.push(`/product/${id}`);
@@ -63,6 +72,11 @@ const ProductGrid: React.FC = () => {
           className={styles.productCard}
           onClick={() => handleProductClick(product.id)}
         >
+          {product.promotion && (
+            <div className={styles.promotionLabel}>
+              {product.promotion.scheme} ({product.promotion.scheme_percentage}%)
+            </div>
+          )}
           <img
             src={product.imageUrl}
             alt={product.title}

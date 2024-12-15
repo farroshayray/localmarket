@@ -1,51 +1,82 @@
 .productGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-top: 16px;
-  }
-  
-  .productCard {
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+  gap: 16px; /* Space between cards */
+  padding: 16px; /* Space around the grid */
+  margin-top: 16px;
+  background-color: #f9fafb; /* Subtle background for the grid */
+}
 
-    background-color: #ffffff;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  
-  .productCard:hover {
-    transform: translateY(-5px);
-  }
-  
-  .productImage {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 16px;
-  }
-  
-  .productInfo {
-    text-align: center;
-  }
-  
-  .productTitle {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: black;
-  }
-  
-  .productDescription {
-    font-size: 0.9em;
-    color: #6b7280;
-    margin-bottom: 12px;
-  }
-  
-  .productPrice {
-    font-size: 1em;
-    font-weight: bold;
-    color: #1f2937;
-  }
-  
+.productCard {
+  position: relative; /* Ensure child elements like promotionLabel are positioned relative to this card */
+  border: 1px solid #e5e7eb; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff;
+  overflow: hidden; /* Ensure inner content fits inside */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.productCard:hover {
+  transform: translateY(-5px); /* Lift effect */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+.productImage {
+  width: 100%; /* Full width */
+  height: 180px; /* Consistent height */
+  object-fit: cover; /* Maintain aspect ratio */
+  border-bottom: 1px solid #e5e7eb; /* Separator between image and content */
+  transition: transform 0.3s ease; /* Smooth image scaling */
+}
+
+.productCard:hover .productImage {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.promotionLabel {
+  position: absolute; /* Position within the product card */
+  top: 8px; /* Space from the top edge of the product card */
+  left: 8px; /* Space from the left edge of the product card */
+  background-color: #ff6f61; /* Bright color for visibility */
+  color: white; /* Contrast text */
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px; /* Rounded label */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  z-index: 10; /* Ensure it appears above the product image */
+}
+
+.productInfo {
+  padding: 16px; /* Inner padding */
+  text-align: center; /* Centered text */
+}
+
+.productTitle {
+  font-size: 1.2rem; /* Slightly larger for prominence */
+  font-weight: bold; /* Emphasis on title */
+  margin-bottom: 8px;
+  color: #1f2937; /* Darker text for better readability */
+  overflow: hidden; /* Handle overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Single-line title */
+}
+
+.productDescription {
+  font-size: 0.9rem; /* Smaller size for secondary info */
+  color: #6b7280; /* Gray text */
+  margin-bottom: 12px;
+  overflow: hidden; /* Handle overflow */
+  text-overflow: ellipsis;
+  display: -webkit-box; /* Multiline ellipsis */
+  -webkit-line-clamp: 2; /* Max two lines */
+  -webkit-box-orient: vertical;
+}
+
+.productPrice {
+  font-size: 1.1rem; /* Slightly larger for emphasis */
+  font-weight: bold;
+  color: #4caf50; /* Green for positive pricing */
+}

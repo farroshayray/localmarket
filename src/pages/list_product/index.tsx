@@ -88,7 +88,7 @@ const ProductsPage = () => {
       <Navbar />
       <div className={classNames('container-tittle',styles.containerTittle)}>
         {/* Judul Halaman */}
-        <h1 className={classNames('tittle',styles.tittle)}>Product List Golekin</h1>
+        <h1 className={classNames('tittle',styles.tittle)}>Daftar Produk Anda</h1>
         {/* Kondisi loading */}
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
@@ -131,10 +131,10 @@ const ProductsPage = () => {
                     {/* Tombol Edit dan Delete */}
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" onClick={() => handleEdit(product.id)}>
-                        Edit
+                        Ubah
                       </Button>
                       <Button variant="destructive" size="sm" onClick={() => handleDelete(product.id)}>
-                        Delete
+                        Hapus
                       </Button>
                     </div>
                   </CardContent>

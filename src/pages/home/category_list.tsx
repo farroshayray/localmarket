@@ -12,6 +12,11 @@ interface Product {
   description: string;
   price: number;
   imageUrl: string;
+  promotion?: {
+    scheme: string;
+    scheme_percentage: number;
+    description: string;
+  };
 }
 
 interface CategoryListProps {
@@ -48,6 +53,13 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
             description: product.description,
             price: product.price,
             imageUrl: product.image_url,
+            promotion: product.promotion
+              ? {
+                  scheme: product.promotion.scheme,
+                  scheme_percentage: product.promotion.scheme_percentage,
+                  description: product.promotion.description,
+                }
+              : null,
           }));
           setProducts(fetchedProducts);
         } 
@@ -110,6 +122,11 @@ const CategoryList: React.FC<CategoryListProps> = ({ categoryId }) => {
           {products.map((product) => (
             <div key={product.id} onClick={() => handleProductClick(product.id)}>
               <div className={styles.productCard}>
+                {product.promotion && (
+                  <div className={styles.promotionLabel}>
+                    {`${capitalizeFirstLetter(product.promotion.scheme)}  ${product.promotion.scheme_percentage}%`}
+                  </div>
+                )}
                 <img src={product.imageUrl} alt={product.title} className={styles.productImage} />
                 <h3 className={styles.productTitle}>{product.title}</h3>
                 <p className={styles.productDescription}>{product.description}</p>

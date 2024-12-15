@@ -67,6 +67,10 @@ const Navbar = () => {
     setIsDriver(false);
     setIsConsumer(false);
   };
+  
+  const handleNavigateToProfile = () => {
+    router.push('/profile');
+  }
 
   const handleRadiusChange = (selectedRadius: string) => {
     setRadius(selectedRadius);
@@ -117,6 +121,12 @@ const Navbar = () => {
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 bg-gray-800 text-white py-2 px-4 rounded shadow-md">
                     <button
+                      onClick={handleNavigateToProfile}
+                      className="block w-full text-left bg-black hover:bg-gray-900 rounded px-2 py-1 mb-1"
+                    >
+                      Profil
+                    </button>
+                    <button
                       onClick={handleLogout}
                       className="block w-full text-left bg-red-800 hover:bg-red-900 rounded px-2 py-1"
                     >
@@ -158,7 +168,7 @@ const Navbar = () => {
               onChange={(e) => handleRadiusChange(e.target.value)}
               className="bg-gray-700 text-white rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             >
-              <option value="">Select Radius</option>
+              <option value="">Pilih Radius</option>
               <option value="<5">{"< 5 km"}</option>
               <option value="5-10">{"5 s.d 10 km"}</option>
               <option value="10-20">{"10 s.d 20 km"}</option>

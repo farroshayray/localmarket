@@ -235,7 +235,7 @@ const CartPage: React.FC = () => {
               ))}
               <div className="border-t pt-2 mt-2 flex justify-between">
                 <p className="text-gray-800 font-bold">
-                  Total Amount: Rp {transaction.total_amount.toLocaleString()}
+                  Jumlah Total: Rp {transaction.total_amount.toLocaleString()}
                 </p>
                 <button
                   onClick={() => handlePayment(transaction)}

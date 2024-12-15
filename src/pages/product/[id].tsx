@@ -15,10 +15,18 @@ interface Product {
   user_id: number;
 }
 
+interface Promotion {
+  scheme: string;
+  scheme_percentage: number;
+  description: string;
+  start_date: string | null;
+  end_date: string | null;
+}
+
 interface ReviewDetails {
   created_at: string;
   review_text: string;
-  star_rating: number,
+  star_rating: number;
   user_id: number;
   user_fullname: string;
 }
@@ -32,6 +40,7 @@ const ProductDetail: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [product, setProduct] = useState<Product | null>(null);
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
   const [categoryName, setCategoryName] = useState<string>("");
   const [shopName, setShopName] = useState<string>("");
   const [reviews, setReviews] = useState<Reviews | null>(null);
@@ -46,7 +55,8 @@ const ProductDetail: React.FC = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`${API_BASE_URL}/products/product/${id}`);
-        const { product, category_name, shop_name, reviews } = response.data;
+        const { product, category_name, shop_name, promotion, reviews } = response.data;
+
         const role = localStorage.getItem("role");
         setIsBuyer(role === "konsumen");
 
@@ -61,6 +71,8 @@ const ProductDetail: React.FC = () => {
           created_at: product.created_at,
           user_id: product.user_id,
         });
+
+        setPromotion(promotion || null);
         setCategoryName(category_name);
         setShopName(shop_name);
         setReviews(reviews);
@@ -119,9 +131,14 @@ const ProductDetail: React.FC = () => {
     <>
       <Navbar />
       <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
-        <div className="flex flex-col md:flex-row">
+        <div className="relative flex flex-col md:flex-row">
           {/* Image Section */}
-          <div className="flex-shrink-0 w-full md:w-1/2">
+          <div className="relative flex-shrink-0 w-full md:w-1/2">
+            {promotion && (
+              <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold py-1 px-2 rounded-md shadow-md z-10">
+                {promotion.scheme} {promotion.scheme_percentage}%
+              </div>
+            )}
             <img
               src={product.image_url}
               alt={product.product_name}
@@ -158,8 +175,32 @@ const ProductDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Promotion Details */}
+      {promotion && (
+        <div className="max-w-4xl mx-auto mt-8 p-6 bg-blue-100 shadow-md rounded-lg">
+          <h2 className="text-lg font-bold text-blue-800">Promotion Details</h2>
+          <p className="text-blue-600 mt-2">
+            <strong>Scheme:</strong> {promotion.scheme} ({promotion.scheme_percentage}%)
+          </p>
+          <p className="text-blue-600 mt-2">
+            <strong>Description:</strong> {promotion.description}
+          </p>
+          {promotion.start_date && (
+            <p className="text-blue-600 mt-2">
+              <strong>Start Date:</strong> {new Date(promotion.start_date).toLocaleString()}
+            </p>
+          )}
+          {promotion.end_date && (
+            <p className="text-blue-600 mt-2">
+              <strong>End Date:</strong> {new Date(promotion.end_date).toLocaleString()}
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Reviews */}
       <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
-        {/* Reviews and Stars Section */}
         <div className="mt-6 bg-gray-900 p-4 rounded-lg">
           <h2 className="text-lg font-bold text-gray-200">Reviews</h2>
           {reviews?.average_rating ? (
@@ -179,7 +220,9 @@ const ProductDetail: React.FC = () => {
                 <li key={index} className="mb-4 bg-gray-200 p-2 rounded-lg my-1">
                   <p className="text-yellow-400">{renderStars(review.star_rating)}</p>
                   <p className="text-gray-600 mt-2">"{review.review_text}"</p>
-                  <p className="text-sm text-gray-500 text-sm mt-2">Pembeli: {review.user_fullname}</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Pembeli: {review.user_fullname}
+                  </p>
                   <small className="text-gray-600">Dibuat pada: {review.created_at}</small>
                 </li>
               ))}

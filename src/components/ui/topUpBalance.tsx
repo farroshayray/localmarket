@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TopUpBalance: React.FC = () => {
+interface TopUpBalanceProps {
+  onBalanceUpdate: (newBalance: number) => void; // Callback to update balance
+}
+
+const TopUpBalance: React.FC<TopUpBalanceProps> = ({ onBalanceUpdate }) => {
   const [balance, setBalance] = useState<number | null>(null);
   const [amount, setAmount] = useState<number | string>('');
   const [pin, setPin] = useState<string>('');
-  const [pinError, setPinError] = useState<string | null>(null); // Pin validation error
+  const [pinError, setPinError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false); // Toggle for showing the form
+  const [showForm, setShowForm] = useState(false);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // Fetch the current balance
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -24,7 +27,9 @@ const TopUpBalance: React.FC = () => {
         const response = await axios.get(`${API_BASE_URL}/user/get_balance`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBalance(response.data.balance);
+        const fetchedBalance = response.data.balance;
+        setBalance(fetchedBalance);
+        onBalanceUpdate(fetchedBalance); // Update parent component
       } catch (err: any) {
         setError(err.response?.data?.error || 'Failed to fetch balance.');
         console.error('Error fetching balance:', err);
@@ -32,7 +37,7 @@ const TopUpBalance: React.FC = () => {
     };
 
     fetchBalance();
-  }, [API_BASE_URL]);
+  }, [API_BASE_URL, onBalanceUpdate]);
 
   const handlePinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -43,7 +48,7 @@ const TopUpBalance: React.FC = () => {
     } else if (value.length !== 6 && value.length > 0) {
       setPinError('PIN must be exactly 6 digits.');
     } else {
-      setPinError(null); // No error
+      setPinError(null);
     }
   };
 
@@ -70,11 +75,14 @@ const TopUpBalance: React.FC = () => {
       setAmount('');
       setPin('');
       setError(null);
+
       // Refresh balance after top-up
       const balanceResponse = await axios.get(`${API_BASE_URL}/user/get_balance`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setBalance(balanceResponse.data.balance);
+      const updatedBalance = balanceResponse.data.balance;
+      setBalance(updatedBalance);
+      onBalanceUpdate(updatedBalance); // Notify parent component
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to top-up balance.');
       setMessage(null);
@@ -92,7 +100,7 @@ const TopUpBalance: React.FC = () => {
         </p>
       )}
       <button
-        onClick={() => setShowForm(!showForm)} // Toggle form visibility
+        onClick={() => setShowForm(!showForm)}
         className={`w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 ${
           showForm ? 'mb-4' : ''
         }`}
