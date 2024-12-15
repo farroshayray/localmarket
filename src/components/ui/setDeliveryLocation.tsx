@@ -101,7 +101,7 @@ const SetDeliveryLocation: React.FC<SetDeliveryLocationProps> = ({ transactionId
 
   return (
     <div className="cover mx-auto mt-4 p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-lg font-bold text-gray-800 mb-4">Set Delivery Location</h2>
+      <h2 className="text-lg font-bold text-gray-800 mb-4">Tentukan Titik Antar</h2>
       <Autocomplete
         onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
         onPlaceChanged={handlePlaceChange}

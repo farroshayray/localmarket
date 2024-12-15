@@ -85,6 +85,37 @@ const TransactionList: React.FC = () => {
     }
   };
 
+  const handleCompleteReview = async (transactionId: number) => {
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        throw new Error("User not authenticated.");
+      }
+
+      const response = await axios.put(
+        `${API_BASE_URL}/transaction/update_status`,
+        { transaction_id: transactionId, status: "completed(reviewed)" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update local transaction status
+      setTransactions((prev) =>
+        prev.map((transaction) =>
+          transaction.id === transactionId ? { ...transaction, status: "completed(reviewed)" } : transaction
+        )
+      );
+
+      alert("Transaksi berhasil diperbarui ke 'completed(reviewed)'.");
+    } catch (error: any) {
+      console.error("Error completing review:", error);
+      alert("Gagal memperbarui status transaksi. Silakan coba lagi.");
+    }
+  };
+
   useEffect(() => {
     const intervals: { [key: number]: NodeJS.Timeout } = {};
 
@@ -124,6 +155,11 @@ const TransactionList: React.FC = () => {
                   <h3 className="text-lg font-medium text-gray-800 mb-2">
                     ID Transaksi: {transaction.id} - Agen: {transaction.market_name}
                   </h3>
+                  <div className="flex">
+                  <p className="text-gray-700 mr-1">Status Transaksi: </p>
+                  <p className="text-black font-bold">{transaction.status}</p>
+                  </div>
+                  
                   <p className="text-sm text-gray-500 mb-4">
                     Dibuat tanggal: {new Date(transaction.created_at).toLocaleString()}
                   </p>
@@ -162,6 +198,14 @@ const TransactionList: React.FC = () => {
                   <p className="text-gray-800 font-bold mb-2">
                     Total: Rp. {(transaction.total_amount + transaction.shipping_cost).toLocaleString()}
                   </p>
+                  {transaction.status === "completed" && (
+                    <Button
+                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
+                      onClick={() => handleCompleteReview(transaction.id)}
+                    >
+                      Selesaikan Review
+                    </Button>
+                  )}
                   {transaction.status === "taken" && (
                     <div>
                       {showMap[transaction.id] ? (

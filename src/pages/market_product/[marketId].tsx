@@ -10,6 +10,10 @@ interface Product {
   description: string;
   price: number;
   imageUrl: string;
+  promotion?: {
+    scheme: string;
+    scheme_percentage: number;
+  };
 }
 
 const MarketProductPage: React.FC = () => {
@@ -23,31 +27,28 @@ const MarketProductPage: React.FC = () => {
 
   useEffect(() => {
     if (!marketId) return;
-  
+
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        try {
-          const response = await axios.get(`${API_BASE_URL}/products/agen_products/${marketId}`);
-          const market_name = response.data.market_name;
-          const fetchedProducts = response.data.products.map((product: any) => ({
-            id: product.id,
-            title: product.product_name,
-            description: product.description,
-            price: product.price,
-            imageUrl: product.image_url,
-          }));
-          setProducts(fetchedProducts);
-          setMarketName(market_name);
-        } catch (err: any) {
-          if (axios.isAxiosError(err) && err.response?.status === 404) {
-            setError('No products found for this market.');
-          } else {
-            throw err; // Lempar error lainnya untuk ditangani di luar blok
-          }
-        }
+        const response = await axios.get(`${API_BASE_URL}/products/agen_products/${marketId}`);
+        const market_name = response.data.market_name;
+        const fetchedProducts = response.data.products.map((product: any) => ({
+          id: product.id,
+          title: product.product_name,
+          description: product.description,
+          price: product.price,
+          imageUrl: product.image_url,
+          promotion: product.promotion, // Include promotion data
+        }));
+        setProducts(fetchedProducts);
+        setMarketName(market_name);
       } catch (err: any) {
-        setError('Failed to fetch products. Please try again later.');
+        if (axios.isAxiosError(err) && err.response?.status === 404) {
+          setError('No products found for this market.');
+        } else {
+          setError('Failed to fetch products. Please try again later.');
+        }
         console.error('Error fetching products:', err.message || err);
       } finally {
         setLoading(false);
@@ -75,30 +76,35 @@ const MarketProductPage: React.FC = () => {
 
   return (
     <>
-    <Navbar />
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-4 ml-4 mt-10">Produk di {marketName}</h1>
-      <div className={styles.productGrid}>
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className={styles.productCard}
-            onClick={() => handleProductClick(product.id)}
-          >
-            <img
-              src={product.imageUrl}
-              alt={product.title}
-              className={styles.productImage}
-            />
-            <div className={styles.productInfo}>
-              <h3 className={styles.productTitle}>{product.title}</h3>
-              <p className={styles.productDescription}>{product.description}</p>
-              <p className={styles.productPrice}>Rp {product.price.toLocaleString()}</p>
+      <Navbar />
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-bold mb-4 ml-4 mt-10">Produk di {marketName}</h1>
+        <div className={styles.productGrid}>
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className={styles.productCard}
+              onClick={() => handleProductClick(product.id)}
+            >
+              {product.promotion && (
+                <div className={styles.promotionLabel}>
+                  {product.promotion.scheme} {product.promotion.scheme_percentage}%
+                </div>
+              )}
+              <img
+                src={product.imageUrl}
+                alt={product.title}
+                className={styles.productImage}
+              />
+              <div className={styles.productInfo}>
+                <h3 className={styles.productTitle}>{product.title}</h3>
+                <p className={styles.productDescription}>{product.description}</p>
+                <p className={styles.productPrice}>Rp {product.price.toLocaleString()}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </>
   );
 };

@@ -8,6 +8,7 @@ import UpdateDescription from "@/components/ui/updateDescription";
 import { Button } from "@/components/ui/button";
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import PromotionDetails from "@/components/ui/promotionDetails";
 
 interface CartItem {
   id: number;
@@ -18,6 +19,13 @@ interface CartItem {
   product_image_url: string;
   quantity: number;
   subtotal: number;
+  promotion: {
+    description: string;
+    scheme: string;
+    scheme_percentage: number;
+    start_date: string | null;
+    end_date: string | null;
+  } | null; // The promotion field can be null if no promotion exists
 }
 
 interface CartTransaction {
@@ -132,7 +140,7 @@ const TransactionDetailPage: React.FC = () => {
       <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Detail Transaksi</h1>
         <h2 className="text-lg font-semibold text-gray-700 mb-2">
-          Market: {transaction.market_name}
+          Agen: {transaction.market_name}
         </h2>
         <div className="bg-gray-100 p-4 rounded-lg">
           {transaction.items.map((item) => (
@@ -185,7 +193,11 @@ const TransactionDetailPage: React.FC = () => {
             setShippingCost(shippingCost);
           }}
         />
-        <TopUpBalance />
+        <TopUpBalance
+          onBalanceUpdate={(newBalance) => {
+            setBalance(newBalance); // Perbarui state saldo di halaman transaksi
+          }}
+        />
       </div>
       <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
         <div className="flex justify-between">
@@ -207,8 +219,24 @@ const TransactionDetailPage: React.FC = () => {
               </div>
             )}
           </div>
-          
         </div>
+      </div>
+      <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+      <p className="text-black text-xl font-bold">Promo yang anda dapatkan</p>
+        {transaction.items.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col justify-between items-start mb-4"
+            >
+              <div className="flex">
+                <div>
+                  {item.promotion && (
+                    <PromotionDetails promotion={item.promotion} />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
       <div className="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
       <div className="flex flex-col">
