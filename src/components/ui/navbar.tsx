@@ -16,7 +16,7 @@ const Navbar = () => {
   const [isDriver, setIsDriver] = useState(false);
   const [isConsumer, setIsConsumer] = useState(false);
   const [username, setUsername] = useState('');
-  const [profileImage, setProfileImage] = useState('/default-user.png');
+  const [profileImage, setProfileImage] = useState('/images/user-polos.jpg');
 
   const router = useRouter();
 
@@ -116,7 +116,7 @@ const Navbar = () => {
                   alt="User Profile"
                   className="w-10 h-10 rounded-full cursor-pointer"
                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                  onError={() => setProfileImage('/default-user.png')}
+                  onError={() => setProfileImage('/images/user-polos.jpg')}
                 />
                 {isProfileMenuOpen && (
                   <div className="absolute right-0 mt-2 bg-gray-800 text-white py-2 px-4 rounded shadow-md">
@@ -153,7 +153,7 @@ const Navbar = () => {
               alt="User Profile"
               className="w-10 h-10 rounded-full cursor-pointer"
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-              onError={() => setProfileImage('/default-user.png')}
+              onError={() => setProfileImage('/images/user-polos.jpg')}
             />
           </button>
         </div>
@@ -184,26 +184,49 @@ const Navbar = () => {
           <div className="flex items-center mb-4">
             <p className="text-white ml-3">{username}</p>
           </div>
-          <ul className="flex flex-col space-y-2">
-            {isAgent && (
-              <li>
-                <Link href="/agen">
-                  <Button className="bg-blue-600 hover:bg-blue-700">Agen</Button>
-                </Link>
-              </li>
-            )}
-            {isLoggedIn ? (
-              <li>
-                <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
+          <ul className="flex flex-col items-center">
+          {isLoggedIn ? (
+            <li className="flex flex-col space-y-1">
+              {isAgent && (
+                <li>
+                  <Link href="/agen">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Agen</Button>
+                  </Link>
+                </li>
+              )}
+              {isDriver && (
+                <li>
+                  <Link href="/driver">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Driver</Button>
+                  </Link>
+                </li>
+              )}
+              <Link href="/profile">
+                <Button className="w-full">Profil</Button>
+              </Link>
+              <Link href="#">
+                <Button
+                  onClick={handleLogout}
+                  className="w-full bg-red-600 hover:bg-red-700"
+                >
                   Keluar
                 </Button>
+              </Link>
+            </li>
+          ) : (
+            <div className='space-y-1'>
+              <li>
+                <Link href="/login">
+                  <Button className="w-full bg-slate-600 hover:bg-slate-50">Masuk</Button>
+                </Link>
               </li>
-            ) : (
-              <>
-                <li><Link href="/login"><Button className="bg-slate-600 hover:bg-slate-50">Masuk</Button></Link></li>
-                <li><Link href="/register"><Button className='bg-gray-600'>Daftar</Button></Link></li>
-              </>
-            )}
+              <li>
+                <Link href="/register">
+                  <Button className="w-full bg-gray-600">Daftar</Button>
+                </Link>
+              </li>
+            </div>
+          )}
           </ul>
         </div>
       )}
