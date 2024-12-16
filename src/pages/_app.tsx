@@ -10,6 +10,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
     <UserProvider>
       <Head>
         <link rel="icon" href="/favicon.png" />
+        <link rel="manifest" href="/manifest.json" />
         <title>Golekin</title>
       </Head>
       <Component {...pageProps} />
