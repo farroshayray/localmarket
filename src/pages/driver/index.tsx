@@ -28,8 +28,8 @@ interface Transaction {
 }
 
 const tabs = [
-  { label: "Order List", status: "processed" },
-  { label: "Order Taken", status: "taken" },
+  { label: "Daftar Order", status: "processed" },
+  { label: "Order Diambil", status: "taken" },
 ];
 
 const Driver: React.FC = () => {
