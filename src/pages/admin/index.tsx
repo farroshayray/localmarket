@@ -9,7 +9,7 @@ import ImageUploader from '@/components/ui/imageUploader';
 const AdminPage: React.FC = () => {
   const [categoryName, setCategoryName] = useState('');
   const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(''); // State untuk menyimpan URL gambar yang diunggah
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -24,7 +24,7 @@ const AdminPage: React.FC = () => {
     const data = {
       category_name: categoryName,
       description,
-      image_url: imageUrl,
+      image_url: imageUrl, // Gunakan URL gambar yang sudah diunggah
     };
 
     try {
@@ -35,7 +35,7 @@ const AdminPage: React.FC = () => {
         setMessage('Category created successfully!');
         setCategoryName('');
         setDescription('');
-        setImageUrl('');
+        setImageUrl(''); // Reset URL gambar setelah berhasil
       } else {
         setMessage('Failed to create category.');
       }
@@ -82,8 +82,9 @@ const AdminPage: React.FC = () => {
             />
           </div>
           <ImageUploader
-            onUploadSuccess={(url) => setImageUrl(url)}
-            uploadUrl={UPLOAD_URL}
+            currentImageUrl={imageUrl} // Menyediakan URL gambar yang diunggah saat ini
+            onUploadSuccess={(url) => setImageUrl(url)} // Callback untuk memperbarui URL gambar
+            uploadUrl={UPLOAD_URL} // Endpoint upload gambar
           />
           <button
             type="submit"

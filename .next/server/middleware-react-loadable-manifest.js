@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"pages\\\\transaction_list\\\\index.tsx -> @/components/MapComponent":{"id":6374,"files":["static/chunks/119.26a4ecc869eda9e3.js","static/chunks/374.2807f70d386a09bf.js"]},"pages\\\\transaction_list\\\\index.tsx -> @/components/reviewForm":{"id":5351,"files":["static/chunks/351.de066dbbfc7aeb7b.js"]}}';

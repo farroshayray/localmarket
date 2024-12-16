@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"; 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; 
 import { useState, useEffect } from "react";
-import useStyle from './style';
+import useStyle from '../../utils/listProductStyles';
 import classNames from "classnames";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Navbar from "@/components/ui/navbar";
