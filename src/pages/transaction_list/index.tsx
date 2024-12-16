@@ -177,7 +177,7 @@ const TransactionList: React.FC = () => {
                           <span>
                             {showReviewForm[item.id] ? (
                               <ReviewForm
-                                productId={item.id}
+                                itemId={item.id}
                                 onClose={() => setShowReviewForm((prev) => ({ ...prev, [item.id]: false }))}
                               />
                             ) : (

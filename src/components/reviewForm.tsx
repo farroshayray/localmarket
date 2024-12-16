@@ -4,11 +4,11 @@ import { FaStar } from "react-icons/fa";
 import axios from "axios";
 
 interface ReviewFormProps {
-  productId: number;
+  itemId: number;
   onClose: () => void;
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ productId, onClose }) => {
+const ReviewForm: React.FC<ReviewFormProps> = ({ itemId, onClose }) => {
   const [reviewText, setReviewText] = useState("");
   const [starRating, setStarRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -25,7 +25,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ productId, onClose }) => {
       }
 
       const payload = {
-        product_id: productId,
+        item_id: itemId,
         review_text: reviewText,
         star_rating: starRating,
       };
