@@ -7,7 +7,7 @@ import { GoogleMap, MarkerF, useLoadScript, Autocomplete } from '@react-google-m
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import useStyles from './style';
+import useStyles from '../../utils/registerStyles';
 import classNames from 'classnames';
 import Navbar from '@/components/ui/navbar';
 import { registerUser } from '@/services/authService';

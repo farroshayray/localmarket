@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/ui/navbar";
-import useStyles from "./style";
+import useStyles from "../../utils/inputProductStyle";
 import classNames from "classnames";
 import axios from "axios";
 import { ProductService } from "@/services/productService";
