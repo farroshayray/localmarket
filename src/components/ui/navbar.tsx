@@ -201,6 +201,13 @@ const Navbar = () => {
                   </Link>
                 </li>
               )}
+              {isConsumer && (
+                <li>
+                  <Link href="/transaction_list">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Transaksi Anda</Button>
+                  </Link>
+                </li>
+              )}
               <Link href="/profile">
                 <Button className="w-full">Profil</Button>
               </Link>
