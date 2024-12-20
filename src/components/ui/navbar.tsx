@@ -204,10 +204,13 @@ const Navbar = () => {
               {isConsumer && (
                 <li>
                   <Link href="/transaction_list">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Transaksi Anda</Button>
+                    <Button className="w-full">Transaksi Anda</Button>
                   </Link>
                 </li>
               )}
+              <Link href="/cartpage">
+                <Button className="w-full">Keranjang <FaShoppingCart className="text-xl" /></Button>
+              </Link>
               <Link href="/profile">
                 <Button className="w-full">Profil</Button>
               </Link>

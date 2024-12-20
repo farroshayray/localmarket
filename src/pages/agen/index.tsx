@@ -120,20 +120,20 @@ const Agen: React.FC = () => {
           <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">Transaksi Agen</h1>
 
           {/* Feature buttons */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 space-x-1 sm:space-x-4 w-auto">
             <Link href="/input_product">
-              <Button className="mr-4 bg-gray-200 text-black hover:bg-gray-300">Tambah Produk</Button>
+              <Button className=" bg-gray-200 text-black hover:bg-gray-300">Tambah Produk</Button>
             </Link>
             <Link href="/list_product">
-              <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Produk Anda</Button>
+              <Button className=" bg-gray-200 text-black hover:bg-gray-300">Produk Anda</Button>
             </Link>
             <Link href="/input_promotion">
-              <Button className="ml-4 bg-gray-200 text-black hover:bg-gray-300">Promosi Anda</Button>
+              <Button className=" bg-gray-200 text-black hover:bg-gray-300">Promosi Anda</Button>
             </Link>
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-center space-x-4 mb-6">
+          <div className="flex flex-col justify-center space-x-1 sm:space-x-4 sm:flex-row mb-6">
             {tabs.map((tab) => (
               <button
                 key={tab.status}
